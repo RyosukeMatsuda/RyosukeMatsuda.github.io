@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ryosuke Matsuda</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --accent: #2563eb;
+      --accent-light: #eff6ff;
+      --text: #1e293b;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --radius: 10px;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── Layout ── */
+    .page { max-width: 860px; margin: 0 auto; padding: 40px 20px 80px; }
+
+    /* ── Header / Profile ── */
+    .profile {
+      display: flex;
+      gap: 32px;
+      align-items: flex-start;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 36px 40px;
+      margin-bottom: 36px;
+    }
+    .profile-photo {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--border);
+      flex-shrink: 0;
+    }
+    .profile-info h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: 4px; }
+    .profile-info .subtitle {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 14px;
+    }
+    .profile-info p { font-size: 0.95rem; color: #334155; margin-bottom: 14px; }
+
+    .contact-links { display: flex; flex-wrap: wrap; gap: 10px; }
+    .contact-links a {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 13px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      font-size: 0.85rem;
+      color: var(--text);
+      background: var(--bg);
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .contact-links a:hover { background: var(--accent-light); border-color: var(--accent); text-decoration: none; color: var(--accent); }
+
+    /* ── Section ── */
+    section { margin-bottom: 36px; }
+    .section-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+      border-bottom: 2px solid var(--accent);
+      padding-bottom: 6px;
+      margin-bottom: 20px;
+      display: inline-block;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px 28px;
+    }
+
+    /* ── Interests ── */
+    .tag-list { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tag {
+      background: var(--accent-light);
+      color: var(--accent);
+      border: 1px solid #bfdbfe;
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    /* ── Biography ── */
+    .timeline { position: relative; padding-left: 20px; }
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 6px;
+      bottom: 0;
+      width: 2px;
+      background: var(--border);
+    }
+    .timeline-item { position: relative; margin-bottom: 24px; }
+    .timeline-item:last-child { margin-bottom: 0; }
+    .timeline-dot {
+      position: absolute;
+      left: -24px;
+      top: 6px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 2px solid white;
+      outline: 2px solid var(--accent);
+    }
+    .timeline-date {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 2px;
+    }
+    .timeline-title { font-weight: 700; font-size: 0.98rem; margin-bottom: 2px; }
+    .timeline-body { font-size: 0.88rem; color: var(--muted); }
+
+    /* ── Publications ── */
+    .pub-list { display: flex; flex-direction: column; gap: 20px; }
+    .pub-item { display: flex; gap: 16px; }
+    .pub-num {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--accent);
+      min-width: 24px;
+      padding-top: 2px;
+    }
+    .pub-content {}
+    .pub-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; }
+    .pub-authors { font-size: 0.88rem; color: var(--muted); margin-bottom: 3px; }
+    .pub-venue { font-size: 0.85rem; font-style: italic; color: #475569; margin-bottom: 8px; }
+    .pub-links { display: flex; gap: 8px; flex-wrap: wrap; }
+    .pub-link {
+      font-size: 0.8rem;
+      padding: 3px 10px;
+      border: 1px solid var(--accent);
+      border-radius: 4px;
+      color: var(--accent);
+      background: var(--accent-light);
+      transition: background 0.15s;
+    }
+    .pub-link:hover { background: var(--accent); color: white; text-decoration: none; }
+
+    /* ── Experience ── */
+    .exp-list { display: flex; flex-direction: column; gap: 18px; }
+    .exp-item {}
+    .exp-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 3px; }
+    .exp-sub { font-size: 0.88rem; color: var(--muted); }
+    .exp-sub a { color: var(--accent); }
+    .badge {
+      display: inline-block;
+      background: #fef9c3;
+      color: #854d0e;
+      border: 1px solid #fde68a;
+      border-radius: 4px;
+      padding: 1px 8px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      margin-left: 6px;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      .profile { flex-direction: column; align-items: center; text-align: center; padding: 24px 20px; }
+      .contact-links { justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ── Profile Header ── -->
+  <div class="profile">
+    <img
+      class="profile-photo"
+      src="https://i.gyazo.com/e60c5b00d3c0622196c673f4a4bc6f85.png"
+      alt="Ryosuke Matsuda"
+      onerror="this.style.display='none'"
+    />
+    <div class="profile-info">
+      <h1>Ryosuke Matsuda</h1>
+      <div class="subtitle">M1 · Tohoku NLP Group, Tohoku University</div>
+      <p>
+        Hello and welcome! I am in my first year of master's students and am a member of the
+        <strong>Tohoku NLP Group</strong>. My research interests are mainly in the area of
+        large-scale visual language models (LVLMs).<br />
+        Currently, I am working on two research topics: <strong>Shitsukan</strong> and <strong>video analysis</strong>.
+      </p>
+      <div class="contact-links">
+        <a href="https://x.com/volumeisryo" target="_blank" rel="noopener">
+          <!-- X icon -->
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.747l7.73-8.835L1.254 2.25H8.08l4.259 5.631 5.905-5.631Zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          X (Twitter)
+        </a>
+        <a href="https://github.com/volume-Volume" target="_blank" rel="noopener">
+          <!-- GitHub icon -->
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg>
+          GitHub
+        </a>
+        <a href="mailto:matsuda.ryosuke.t4@dc.tohoku.ac.jp">
+          <!-- Mail icon -->
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+          Gmail
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Interests ── -->
+  <section>
+    <div class="section-title">Interests</div>
+    <div class="card">
+      <div class="tag-list">
+        <span class="tag">Vision &amp; Language</span>
+        <span class="tag">Natural Language Processing</span>
+        <span class="tag">Large-scale Visual Language Models</span>
+        <span class="tag">Shitsukan (Material Perception)</span>
+        <span class="tag">Video Analysis</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Biography ── -->
+  <section>
+    <div class="section-title">Biography</div>
+    <div class="card">
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">2003.07</div>
+          <div class="timeline-title">Born</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">2022.04</div>
+          <div class="timeline-title">Tohoku University — Bachelor</div>
+          <div class="timeline-body">
+            Department of Electrical, Information and Physics Engineering, School of Engineering
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">2025.04</div>
+          <div class="timeline-title">Tohoku University — Master</div>
+          <div class="timeline-body">
+            Fundamental Artificial Intelligence, Department of System Information Sciences,
+            Graduate School of Information Sciences
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Publications ── -->
+  <section>
+    <div class="section-title">Publications</div>
+    <div class="card">
+      <div class="pub-list">
+        <div class="pub-item">
+          <div class="pub-num">[1]</div>
+          <div class="pub-content">
+            <div class="pub-title">大規模視覚言語モデルの質感知覚能力の分析</div>
+            <div class="pub-authors">
+              <strong>松田陵佑</strong>, 塩野大輝, Ana Brasard, 鈴木潤
+            </div>
+            <div class="pub-venue">
+              言語処理学会第31回年次大会（NLP 2025）, 長崎, pp.2550–2555, March 2025.
+            </div>
+            <div class="pub-links">
+              <a
+                class="pub-link"
+                href="https://www.anlp.jp/proceedings/annual_meeting/2025/pdf_dir/Q6-14.pdf"
+                target="_blank"
+                rel="noopener"
+              >Paper</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Experience ── -->
+  <section>
+    <div class="section-title">Experience</div>
+    <div class="card">
+      <div class="exp-list">
+        <div class="exp-item">
+          <div class="exp-title">
+            JPHACKS 2024 — Award Day Finalist &amp; Innovator
+            <span class="badge">🎉</span>
+          </div>
+          <div class="exp-sub">
+            SpeakingLearningApp: Eigoイスト —
+            <a href="https://github.com/jphacks/sd_2401" target="_blank" rel="noopener">GitHub</a>
+          </div>
+        </div>
+        <div class="exp-item">
+          <div class="exp-title">
+            Tohoku University Early Graduation
+            <span class="badge">🌸</span>
+          </div>
+          <div class="exp-sub">
+            Graduated Tohoku University (Bachelor) in 3 years!
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+</body>
+</html>
