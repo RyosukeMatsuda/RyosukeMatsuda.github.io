@@ -28,7 +28,7 @@
         --text-secondary: #334155;
         --muted: #64748b;
         --border: #e2e8f0;
-        --bg: #f1f5f9;
+        --bg: #ffffff;
         --card: #ffffff;
         --radius: 12px;
         --radius-lg: 16px;
@@ -238,7 +238,7 @@
         position: absolute;
         bottom: calc(100% + 10px);
         right: 0;
-        background: var(--card);
+        background: #ffffff;
         border: 1px solid var(--border);
         border-radius: 10px;
         box-shadow: var(--shadow-hover);
@@ -267,7 +267,7 @@
         right: 12px;
         width: 10px;
         height: 10px;
-        background: var(--card);
+        background: #ffffff;
         border-right: 1px solid var(--border);
         border-bottom: 1px solid var(--border);
         transform: rotate(45deg);
@@ -308,7 +308,9 @@
 
       /* ── Sections ── */
       section {
-        margin-bottom: 28px;
+        margin-bottom: 36px;
+        padding-top: 28px;
+        border-top: 1px solid var(--border);
       }
       .section-title {
         font-size: 0.72rem;
@@ -330,15 +332,11 @@
 
       /* ── Card ── */
       .card {
-        background: var(--card);
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        padding: 24px 28px;
-        box-shadow: var(--shadow);
-        transition: box-shadow 0.2s ease;
-      }
-      .card:hover {
-        box-shadow: var(--shadow-hover);
+        background: transparent;
+        border: none;
+        border-radius: 0;
+        padding: 0;
+        box-shadow: none;
       }
 
       /* ── Tags ── */
@@ -683,8 +681,8 @@
         }
         .profile-content {
           flex-direction: column;
-          align-items: center;
-          text-align: center;
+          align-items: flex-start;
+          text-align: left;
           padding: 0 20px 24px;
           gap: 0;
         }
@@ -705,13 +703,13 @@
           font-size: 0.9rem;
         }
         .affiliations {
-          justify-content: center;
+          justify-content: flex-start;
         }
         .affil-logo {
           height: 28px;
         }
         .contact-links {
-          justify-content: center;
+          justify-content: flex-start;
         }
         .contact-links a {
           width: 44px;
@@ -737,6 +735,28 @@
         .thumb-icon { width: 100px; height: 72px; font-size: 2rem; }
         .pub-abstract-btn {
           margin-left: 0;
+        }
+
+        /* Publications: stack content in column, thumbnail absolute at bottom-right */
+        .pub-list .pub-top {
+          position: relative;
+          flex-direction: column;
+        }
+        .pub-list .pub-thumb-wrap {
+          position: absolute;
+          right: 0;
+          bottom: 0;
+        }
+        .pub-list .pub-body {
+          width: 100%;
+        }
+        .pub-list .pub-actions {
+          padding-right: 116px; /* reserve space for thumbnail (100px + 16px gap) */
+        }
+
+        /* Awards: thumbnail on the right */
+        .exp-list .pub-top {
+          flex-direction: row-reverse;
         }
 
         .timeline {
@@ -1298,7 +1318,7 @@
                 </div>
                 <div>
                   <div class="exp-title">
-                    <span>JPHACKS 2024<span class="badge">🎉</span></span>
+                    <span>JPHACKS 2024 Awards</span>
                   </div>
                   <div class="exp-sub">
                     <a
@@ -1340,7 +1360,7 @@
                   <div class="exp-title">
                     <span
                       >Tohoku University Early Graduation
-                      <span class="badge">🌸</span></span
+                      </span
                     >
                   </div>
                   <div class="exp-sub">
