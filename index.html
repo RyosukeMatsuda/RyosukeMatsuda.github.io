@@ -1,338 +1,1520 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ryosuke Matsuda</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --accent: #2563eb;
-      --accent-light: #eff6ff;
-      --text: #1e293b;
-      --muted: #64748b;
-      --border: #e2e8f0;
-      --bg: #f8fafc;
-      --card: #ffffff;
-      --radius: 10px;
-    }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.7;
-      font-size: 15px;
-    }
-
-    a { color: var(--accent); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-
-    /* ── Layout ── */
-    .page { max-width: 860px; margin: 0 auto; padding: 40px 20px 80px; }
-
-    /* ── Header / Profile ── */
-    .profile {
-      display: flex;
-      gap: 32px;
-      align-items: flex-start;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 36px 40px;
-      margin-bottom: 36px;
-    }
-    .profile-photo {
-      width: 130px;
-      height: 130px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 3px solid var(--border);
-      flex-shrink: 0;
-    }
-    .profile-info h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: 4px; }
-    .profile-info .subtitle {
-      color: var(--muted);
-      font-size: 0.95rem;
-      margin-bottom: 14px;
-    }
-    .profile-info p { font-size: 0.95rem; color: #334155; margin-bottom: 14px; }
-
-    .contact-links { display: flex; flex-wrap: wrap; gap: 10px; }
-    .contact-links a {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 5px 13px;
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      font-size: 0.85rem;
-      color: var(--text);
-      background: var(--bg);
-      transition: background 0.15s, border-color 0.15s;
-    }
-    .contact-links a:hover { background: var(--accent-light); border-color: var(--accent); text-decoration: none; color: var(--accent); }
-
-    /* ── Section ── */
-    section { margin-bottom: 36px; }
-    .section-title {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--text);
-      border-bottom: 2px solid var(--accent);
-      padding-bottom: 6px;
-      margin-bottom: 20px;
-      display: inline-block;
-    }
-
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 24px 28px;
-    }
-
-    /* ── Interests ── */
-    .tag-list { display: flex; flex-wrap: wrap; gap: 8px; }
-    .tag {
-      background: var(--accent-light);
-      color: var(--accent);
-      border: 1px solid #bfdbfe;
-      border-radius: 20px;
-      padding: 4px 14px;
-      font-size: 0.85rem;
-      font-weight: 500;
-    }
-
-    /* ── Biography ── */
-    .timeline { position: relative; padding-left: 20px; }
-    .timeline::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 6px;
-      bottom: 0;
-      width: 2px;
-      background: var(--border);
-    }
-    .timeline-item { position: relative; margin-bottom: 24px; }
-    .timeline-item:last-child { margin-bottom: 0; }
-    .timeline-dot {
-      position: absolute;
-      left: -24px;
-      top: 6px;
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: var(--accent);
-      border: 2px solid white;
-      outline: 2px solid var(--accent);
-    }
-    .timeline-date {
-      font-size: 0.78rem;
-      font-weight: 700;
-      color: var(--accent);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 2px;
-    }
-    .timeline-title { font-weight: 700; font-size: 0.98rem; margin-bottom: 2px; }
-    .timeline-body { font-size: 0.88rem; color: var(--muted); }
-
-    /* ── Publications ── */
-    .pub-list { display: flex; flex-direction: column; gap: 20px; }
-    .pub-item { display: flex; gap: 16px; }
-    .pub-num {
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: var(--accent);
-      min-width: 24px;
-      padding-top: 2px;
-    }
-    .pub-content {}
-    .pub-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; }
-    .pub-authors { font-size: 0.88rem; color: var(--muted); margin-bottom: 3px; }
-    .pub-venue { font-size: 0.85rem; font-style: italic; color: #475569; margin-bottom: 8px; }
-    .pub-links { display: flex; gap: 8px; flex-wrap: wrap; }
-    .pub-link {
-      font-size: 0.8rem;
-      padding: 3px 10px;
-      border: 1px solid var(--accent);
-      border-radius: 4px;
-      color: var(--accent);
-      background: var(--accent-light);
-      transition: background 0.15s;
-    }
-    .pub-link:hover { background: var(--accent); color: white; text-decoration: none; }
-
-    /* ── Experience ── */
-    .exp-list { display: flex; flex-direction: column; gap: 18px; }
-    .exp-item {}
-    .exp-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 3px; }
-    .exp-sub { font-size: 0.88rem; color: var(--muted); }
-    .exp-sub a { color: var(--accent); }
-    .badge {
-      display: inline-block;
-      background: #fef9c3;
-      color: #854d0e;
-      border: 1px solid #fde68a;
-      border-radius: 4px;
-      padding: 1px 8px;
-      font-size: 0.78rem;
-      font-weight: 600;
-      margin-left: 6px;
-    }
-
-    /* ── Responsive ── */
-    @media (max-width: 600px) {
-      .profile { flex-direction: column; align-items: center; text-align: center; padding: 24px 20px; }
-      .contact-links { justify-content: center; }
-    }
-  </style>
-</head>
-<body>
-<div class="page">
-
-  <!-- ── Profile Header ── -->
-  <div class="profile">
-    <img
-      class="profile-photo"
-      src="https://i.gyazo.com/e60c5b00d3c0622196c673f4a4bc6f85.png"
-      alt="Ryosuke Matsuda"
-      onerror="this.style.display='none'"
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ryosuke Matsuda</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
+      rel="stylesheet"
     />
-    <div class="profile-info">
-      <h1>Ryosuke Matsuda</h1>
-      <div class="subtitle">M1 · Tohoku NLP Group, Tohoku University</div>
-      <p>
-        Hello and welcome! I am in my first year of master's students and am a member of the
-        <strong>Tohoku NLP Group</strong>. My research interests are mainly in the area of
-        large-scale visual language models (LVLMs).<br />
-        Currently, I am working on two research topics: <strong>Shitsukan</strong> and <strong>video analysis</strong>.
-      </p>
-      <div class="contact-links">
-        <a href="https://x.com/volumeisryo" target="_blank" rel="noopener">
-          <!-- X icon -->
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.747l7.73-8.835L1.254 2.25H8.08l4.259 5.631 5.905-5.631Zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-          X (Twitter)
-        </a>
-        <a href="https://github.com/RyosukeMatsuda" target="_blank" rel="noopener">
-          <!-- GitHub icon -->
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg>
-          GitHub
-        </a>
-        <a href="mailto:matsuda.ryosuke.t4@dc.tohoku.ac.jp">
-          <!-- Mail icon -->
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-          Gmail
-        </a>
-      </div>
-    </div>
-  </div>
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
 
-  <!-- ── Interests ── -->
-  <section>
-    <div class="section-title">Interests</div>
-    <div class="card">
-      <div class="tag-list">
-        <span class="tag">Vision &amp; Language</span>
-        <span class="tag">Natural Language Processing</span>
-        <span class="tag">Large-scale Visual Language Models</span>
-        <span class="tag">Shitsukan (Material Perception)</span>
-        <span class="tag">Video Analysis</span>
-      </div>
-    </div>
-  </section>
+      :root {
+        --accent: #16a34a;
+        --accent-hover: #15803d;
+        --accent-light: #f0fdf4;
+        --accent-border: #bbf7d0;
+        --text: #0f172a;
+        --text-secondary: #334155;
+        --muted: #64748b;
+        --border: #e2e8f0;
+        --bg: #f1f5f9;
+        --card: #ffffff;
+        --radius: 12px;
+        --radius-lg: 16px;
+        --shadow: 0 1px 3px rgba(0, 0, 0, 0.07), 0 4px 16px rgba(0, 0, 0, 0.06);
+        --shadow-hover:
+          0 4px 16px rgba(0, 0, 0, 0.1), 0 12px 32px rgba(0, 0, 0, 0.08);
+      }
 
-  <!-- ── Biography ── -->
-  <section>
-    <div class="section-title">Biography</div>
-    <div class="card">
-      <div class="timeline">
-        <div class="timeline-item">
-          <div class="timeline-dot"></div>
-          <div class="timeline-date">2003.07</div>
-          <div class="timeline-title">Born</div>
-        </div>
-        <div class="timeline-item">
-          <div class="timeline-dot"></div>
-          <div class="timeline-date">2022.04</div>
-          <div class="timeline-title">Tohoku University — Bachelor</div>
-          <div class="timeline-body">
-            Department of Electrical, Information and Physics Engineering, School of Engineering
-          </div>
-        </div>
-        <div class="timeline-item">
-          <div class="timeline-dot"></div>
-          <div class="timeline-date">2025.04</div>
-          <div class="timeline-title">Tohoku University — Master</div>
-          <div class="timeline-body">
-            Fundamental Artificial Intelligence, Department of System Information Sciences,
-            Graduate School of Information Sciences
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+      @media (prefers-reduced-motion: no-preference) {
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(18px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .profile {
+          animation: fadeInUp 0.5s ease both;
+        }
+        section:nth-of-type(1) {
+          animation: fadeInUp 0.5s 0.08s ease both;
+        }
+        section:nth-of-type(2) {
+          animation: fadeInUp 0.5s 0.14s ease both;
+        }
+        section:nth-of-type(3) {
+          animation: fadeInUp 0.5s 0.2s ease both;
+        }
+        section:nth-of-type(4) {
+          animation: fadeInUp 0.5s 0.26s ease both;
+        }
+        section:nth-of-type(5) {
+          animation: fadeInUp 0.5s 0.32s ease both;
+        }
+        section:nth-of-type(6) {
+          animation: fadeInUp 0.5s 0.38s ease both;
+        }
+      }
 
-  <!-- ── Publications ── -->
-  <section>
-    <div class="section-title">Publications</div>
-    <div class="card">
-      <div class="pub-list">
-        <div class="pub-item">
-          <div class="pub-num">[1]</div>
-          <div class="pub-content">
-            <div class="pub-title">大規模視覚言語モデルの質感知覚能力の分析</div>
-            <div class="pub-authors">
-              <strong>松田陵佑</strong>, 塩野大輝, Ana Brasard, 鈴木潤
-            </div>
-            <div class="pub-venue">
-              言語処理学会第31回年次大会（NLP 2025）, 長崎, pp.2550–2555, March 2025.
-            </div>
-            <div class="pub-links">
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family:
+          "Plus Jakarta Sans",
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.7;
+        font-size: 16px;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      a {
+        color: var(--accent);
+        text-decoration: none;
+        transition: color 0.15s;
+      }
+      a:hover {
+        color: var(--accent-hover);
+        text-decoration: underline;
+      }
+      a:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+        border-radius: 3px;
+      }
+
+      /* ── Layout ── */
+      .page {
+        max-width: 880px;
+        margin: 0 auto;
+        padding: 40px 20px 80px;
+      }
+
+      /* ── Profile Card ── */
+      .profile {
+        background: var(--card);
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--border);
+        overflow: hidden;
+        margin-bottom: 28px;
+        box-shadow: var(--shadow);
+      }
+      .profile-banner {
+        height: 90px;
+        background: linear-gradient(
+          135deg,
+          #166534 0%,
+          #16a34a 55%,
+          #0d9488 100%
+        );
+      }
+      .profile-content {
+        display: flex;
+        gap: 24px;
+        padding: 0 36px 32px;
+        align-items: flex-start;
+      }
+      .profile-photo {
+        width: 110px;
+        height: 110px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid var(--card);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.14);
+        margin-top: -55px;
+        flex-shrink: 0;
+        background: var(--border);
+      }
+      .profile-info {
+        flex: 1;
+        min-width: 0;
+        padding-top: 14px;
+      }
+      .profile-info h1 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--text);
+        letter-spacing: -0.02em;
+        margin-bottom: 4px;
+      }
+      .profile-info .subtitle {
+        color: var(--muted);
+        font-size: 0.9rem;
+        font-weight: 500;
+        margin-bottom: 14px;
+      }
+      .profile-info p {
+        font-size: 0.93rem;
+        color: var(--text-secondary);
+        margin-bottom: 20px;
+        max-width: 58ch;
+      }
+
+      /* ── Affiliations ── */
+      .affiliations {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+      }
+      .affil-link {
+        display: inline-flex;
+        align-items: center;
+        opacity: 0.78;
+        transition:
+          opacity 0.18s ease,
+          transform 0.18s ease;
+        text-decoration: none;
+      }
+      .affil-link:hover {
+        opacity: 1;
+        transform: translateY(-2px);
+        text-decoration: none;
+      }
+      .affil-logo {
+        height: 36px;
+        width: auto;
+        object-fit: contain;
+      }
+
+      /* ── Contact Links ── */
+      .contact-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+      }
+      .contact-links a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        color: var(--muted);
+        background: var(--card);
+        transition: all 0.18s ease;
+        cursor: pointer;
+        text-decoration: none;
+        flex-shrink: 0;
+      }
+      .contact-links a:hover {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: white;
+        text-decoration: none;
+        transform: translateY(-3px);
+        box-shadow: 0 6px 16px rgba(22, 163, 74, 0.3);
+      }
+
+      /* ── Email popup ── */
+      .email-wrap {
+        position: relative;
+      }
+      .email-popup {
+        position: absolute;
+        bottom: calc(100% + 10px);
+        right: 0;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        box-shadow: var(--shadow-hover);
+        padding: 10px 12px;
+        white-space: nowrap;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(4px);
+        transition:
+          opacity 0.18s ease,
+          transform 0.18s ease,
+          visibility 0.18s ease;
+        z-index: 200;
+        pointer-events: none;
+      }
+      .email-popup.open {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+        pointer-events: auto;
+      }
+      .email-popup::after {
+        content: "";
+        position: absolute;
+        bottom: -6px;
+        right: 12px;
+        width: 10px;
+        height: 10px;
+        background: var(--card);
+        border-right: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+        transform: rotate(45deg);
+      }
+      .email-popup-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .email-popup-addr {
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: var(--text);
+        letter-spacing: 0.01em;
+      }
+      .email-copy-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 3px 9px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        background: var(--bg);
+        font-size: 0.74rem;
+        font-weight: 600;
+        color: var(--muted);
+        cursor: pointer;
+        transition: all 0.15s;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+      .email-copy-btn:hover,
+      .email-copy-btn.copied {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: white;
+      }
+
+      /* ── Sections ── */
+      section {
+        margin-bottom: 28px;
+      }
+      .section-title {
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .section-title::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+      }
+
+      /* ── Card ── */
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 24px 28px;
+        box-shadow: var(--shadow);
+        transition: box-shadow 0.2s ease;
+      }
+      .card:hover {
+        box-shadow: var(--shadow-hover);
+      }
+
+      /* ── Tags ── */
+      .tag-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .tag {
+        background: var(--accent-light);
+        color: var(--accent);
+        border: 1px solid var(--accent-border);
+        border-radius: 6px;
+        padding: 5px 13px;
+        font-size: 0.83rem;
+        font-weight: 600;
+        letter-spacing: 0.01em;
+      }
+
+      /* ── Timeline ── */
+      .timeline {
+        position: relative;
+        padding-left: 24px;
+      }
+      .timeline::before {
+        content: "";
+        position: absolute;
+        left: 5px;
+        top: 8px;
+        bottom: 4px;
+        width: 2px;
+        background: linear-gradient(
+          to bottom,
+          var(--accent-border),
+          var(--border)
+        );
+        border-radius: 1px;
+      }
+      .timeline-item {
+        position: relative;
+        margin-bottom: 22px;
+      }
+      .timeline-item:last-child {
+        margin-bottom: 0;
+      }
+      .timeline-dot {
+        position: absolute;
+        left: -27px;
+        top: 7px;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: var(--accent);
+        border: 3px solid var(--card);
+        box-shadow: 0 0 0 2px var(--accent);
+      }
+      .timeline-date {
+        font-size: 0.73rem;
+        font-weight: 700;
+        color: var(--accent);
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        margin-bottom: 3px;
+      }
+      .timeline-title {
+        font-weight: 700;
+        font-size: 0.95rem;
+        color: var(--text);
+        margin-bottom: 2px;
+      }
+      .timeline-body {
+        font-size: 0.87rem;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      /* ── Publications ── */
+      .pub-list {
+        display: flex;
+        flex-direction: column;
+      }
+      .pub-item {
+        padding: 20px 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .pub-item:first-child {
+        padding-top: 0;
+      }
+      .pub-item:last-child {
+        padding-bottom: 0;
+        border-bottom: none;
+      }
+
+      .pub-top {
+        display: flex;
+        gap: 16px;
+        align-items: flex-start;
+      }
+      .pub-thumb-wrap {
+        width: 136px;
+        height: 96px;
+        overflow: hidden;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: #ffffff;
+        flex-shrink: 0;
+        cursor: zoom-in;
+        transition:
+          transform 0.22s ease,
+          box-shadow 0.22s ease;
+        user-select: none;
+      }
+      .pub-thumb {
+        width: 100%;
+        height: 96px;
+        object-fit: contain;
+        object-position: center;
+        display: block;
+        padding: 4px;
+      }
+      .pub-item:hover .pub-thumb-wrap {
+        transform: scale(1.04);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+      }
+      .pub-body {
+        flex: 1;
+        min-width: 0;
+      }
+      .pub-num-title {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        margin-bottom: 5px;
+      }
+      .pub-num {
+        font-size: 0.83rem;
+        font-weight: 700;
+        color: var(--accent);
+        min-width: 28px;
+        flex-shrink: 0;
+        padding-top: 2px;
+      }
+      .pub-title {
+        font-weight: 700;
+        font-size: 0.93rem;
+        color: var(--text);
+        line-height: 1.5;
+      }
+      .pub-authors {
+        font-size: 0.85rem;
+        color: var(--muted);
+        margin-bottom: 3px;
+      }
+      .pub-venue {
+        font-size: 0.83rem;
+        color: var(--text-secondary);
+        margin-bottom: 10px;
+      }
+      .pub-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .pub-links {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        flex: 1;
+      }
+      .pub-link {
+        display: inline-flex;
+        align-items: center;
+        font-size: 0.78rem;
+        font-weight: 600;
+        padding: 5px 12px;
+        border: 1px solid var(--accent-border);
+        border-radius: 6px;
+        color: var(--accent);
+        background: var(--accent-light);
+        transition: all 0.15s ease;
+        cursor: pointer;
+      }
+      .pub-link:hover {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: white;
+        text-decoration: none;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 10px rgba(22, 163, 74, 0.25);
+      }
+      .pub-abstract-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        padding: 5px 11px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        background: var(--bg);
+        color: var(--muted);
+        cursor: pointer;
+        transition: all 0.15s ease;
+        white-space: nowrap;
+        margin-left: auto;
+      }
+      .pub-abstract-btn:hover,
+      .pub-item.expanded .pub-abstract-btn {
+        border-color: var(--accent-border);
+        color: var(--accent);
+        background: var(--accent-light);
+      }
+      .pub-abstract-btn .chevron {
+        transition: transform 0.25s ease;
+        display: block;
+      }
+      .pub-item.expanded .pub-abstract-btn .chevron {
+        transform: rotate(180deg);
+      }
+      /* Smooth accordion via CSS grid */
+      .pub-abstract-wrap {
+        display: grid;
+        grid-template-rows: 0fr;
+        transition: grid-template-rows 0.28s ease;
+      }
+      .pub-item.expanded .pub-abstract-wrap {
+        grid-template-rows: 1fr;
+      }
+      .pub-abstract-inner {
+        overflow: hidden;
+      }
+      .pub-abstract {
+        margin-top: 14px;
+        padding: 14px 16px;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        line-height: 1.8;
+      }
+      .pub-abstract-label {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--accent);
+        margin-bottom: 6px;
+      }
+
+      /* ── Experience / Awards ── */
+      .exp-list {
+        display: flex;
+        flex-direction: column;
+      }
+      .exp-item {
+        padding: 16px 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .exp-item:first-child {
+        padding-top: 0;
+      }
+      .exp-item:last-child {
+        padding-bottom: 0;
+        border-bottom: none;
+      }
+      .exp-title {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 8px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        color: var(--text);
+        margin-bottom: 4px;
+      }
+      .exp-sub {
+        display: flex;
+        align-items: baseline;
+        flex-wrap: wrap;
+        gap: 8px;
+        font-size: 0.87rem;
+        color: var(--muted);
+        margin-bottom: 4px;
+      }
+      .exp-description {
+        margin-top: 8px;
+        font-size: 0.88rem;
+        color: var(--muted);
+      }
+      .exp-description ul {
+        padding-left: 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 4px;
+      }
+      .exp-description li {
+        line-height: 1.6;
+      }
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        background: #fef9c3;
+        color: #92400e;
+        border: 1px solid #fde68a;
+        border-radius: 6px;
+        padding: 2px 8px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+      }
+      .early-note {
+        font-size: 0.8rem;
+        color: var(--muted);
+        font-weight: 500;
+      }
+
+      /* ── Thumb icon placeholder (no image) ── */
+      .thumb-icon {
+        width: 136px;
+        height: 96px;
+        border-radius: 8px;
+        border: 1px solid var(--accent-border);
+        background: linear-gradient(135deg, var(--accent-light) 0%, #bbf7d0 100%);
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.4rem;
+      }
+
+      /* ── Responsive: Mobile (≤ 640px) ── */
+      @media (max-width: 640px) {
+        .page {
+          padding: 16px 14px 60px;
+        }
+
+        .profile-banner {
+          height: 70px;
+        }
+        .profile-content {
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+          padding: 0 20px 24px;
+          gap: 0;
+        }
+        .profile-photo {
+          width: 88px;
+          height: 88px;
+          margin-top: -44px;
+          margin-bottom: 12px;
+        }
+        .profile-info {
+          padding-top: 0;
+        }
+        .profile-info h1 {
+          font-size: 1.45rem;
+        }
+        .profile-info p {
+          max-width: none;
+          font-size: 0.9rem;
+        }
+        .affiliations {
+          justify-content: center;
+        }
+        .affil-logo {
+          height: 28px;
+        }
+        .contact-links {
+          justify-content: center;
+        }
+        .contact-links a {
+          width: 44px;
+          height: 44px;
+        }
+
+        .card {
+          padding: 18px 16px;
+        }
+
+        .pub-link,
+        .pub-abstract-btn {
+          min-height: 44px;
+          padding: 0 14px;
+        }
+        .pub-thumb-wrap {
+          width: 100px;
+          height: 72px;
+        }
+        .pub-thumb {
+          height: 72px;
+        }
+        .thumb-icon { width: 100px; height: 72px; font-size: 2rem; }
+        .pub-abstract-btn {
+          margin-left: 0;
+        }
+
+        .timeline {
+          padding-left: 20px;
+        }
+        .timeline-dot {
+          left: -23px;
+        }
+      }
+
+      /* ── Lightbox ── */
+      .lightbox {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.82);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition:
+          opacity 0.25s ease,
+          visibility 0.25s ease;
+        cursor: zoom-out;
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+      }
+      .lightbox.open {
+        opacity: 1;
+        visibility: visible;
+      }
+      .lightbox-close-btn {
+        position: fixed;
+        top: 16px;
+        right: 16px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.15s;
+        z-index: 1001;
+      }
+      .lightbox-close-btn:hover {
+        background: rgba(255, 255, 255, 0.28);
+      }
+      #lightbox-img {
+        max-width: min(88vw, 460px);
+        max-height: 85vh;
+        border-radius: 16px;
+        box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55);
+        transform: scale(0.88);
+        transition: transform 0.25s ease;
+        object-fit: contain;
+        pointer-events: none;
+        display: none;
+      }
+      .lightbox.open #lightbox-img {
+        transform: scale(1);
+      }
+      #lightbox-pdf {
+        width: min(90vw, 820px);
+        height: 85vh;
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55);
+        transform: scale(0.88);
+        transition: transform 0.25s ease;
+        display: none;
+        background: white;
+        cursor: auto;
+      }
+      .lightbox.open #lightbox-pdf {
+        transform: scale(1);
+      }
+
+      /* ── Responsive: Tablet (641px – 900px) ── */
+      @media (min-width: 641px) and (max-width: 900px) {
+        .profile-content {
+          padding: 0 28px 28px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <!-- ── Profile ── -->
+      <div class="profile">
+        <div class="profile-banner"></div>
+        <div class="profile-content">
+          <img
+            class="profile-photo"
+            src="material/images/my_icon.png"
+            alt="Ryosuke Matsuda"
+            onerror="this.style.display = 'none'"
+            style="cursor: zoom-in"
+            title="ダブルクリックで拡大"
+          />
+          <div class="profile-info">
+            <h1>Ryosuke Matsuda</h1>
+            <div class="subtitle">M1 · Tohoku University</div>
+            <div class="affiliations">
               <a
-                class="pub-link"
-                href="https://www.anlp.jp/proceedings/annual_meeting/2025/pdf_dir/Q6-14.pdf"
+                class="affil-link"
+                href="https://www.nlp.ecei.tohoku.ac.jp/"
                 target="_blank"
                 rel="noopener"
-              >Paper</a>
+                aria-label="Tohoku NLP Group"
+              >
+                <img
+                  class="affil-logo"
+                  src="material/images/tohoku_nlp.png"
+                  alt="Tohoku NLP Group"
+                />
+              </a>
+              <a
+                class="affil-link"
+                href="https://www.fai.cds.tohoku.ac.jp/"
+                target="_blank"
+                rel="noopener"
+                aria-label="FaiLab"
+              >
+                <img
+                  class="affil-logo"
+                  src="material/images/failab.png"
+                  alt="FaiLab"
+                />
+              </a>
+            </div>
+            <p>
+              Hello and welcome! I am in my first year of master's students and
+              am a member of the <strong>Tohoku NLP Group</strong> and
+              <strong>FaiLab</strong>. My research interests are mainly in the
+              area of large visual language models (LVLMs).<br />
+              Currently, I am working on two research topics:
+              <strong>Shitsukan</strong> and <strong>T2V models</strong>.
+            </p>
+            <div class="contact-links">
+              <a
+                href="https://x.com/volumeisryo"
+                target="_blank"
+                rel="noopener"
+                aria-label="X (Twitter)"
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.747l7.73-8.835L1.254 2.25H8.08l4.259 5.631 5.905-5.631Zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                  />
+                </svg>
+              </a>
+              <a
+                href="https://github.com/RyosukeMatsuda"
+                target="_blank"
+                rel="noopener"
+                aria-label="GitHub"
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"
+                  />
+                </svg>
+              </a>
+              <a
+                href="https://www.linkedin.com/in/ryosuke-matsuda"
+                target="_blank"
+                rel="noopener"
+                aria-label="LinkedIn"
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"
+                  />
+                </svg>
+              </a>
+              <div class="email-wrap">
+                <a
+                  href="mailto:matsuda.ryosuke@dc.tohoku.ac.jp"
+                  id="email-icon-btn"
+                  aria-label="メールアドレスを表示"
+                  aria-expanded="false"
+                >
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <rect width="20" height="16" x="2" y="4" rx="2" />
+                    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                  </svg>
+                </a>
+                <div class="email-popup" id="email-popup">
+                  <div class="email-popup-row">
+                    <span class="email-popup-addr"
+                      >matsuda.ryosuke@dc.tohoku.ac.jp</span
+                    >
+                    <button
+                      class="email-copy-btn"
+                      id="email-copy-btn"
+                      type="button"
+                    >
+                      コピー
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
 
-  <!-- ── Experience ── -->
-  <section>
-    <div class="section-title">Experience</div>
-    <div class="card">
-      <div class="exp-list">
-        <div class="exp-item">
-          <div class="exp-title">
-            JPHACKS 2024 — Award Day Finalist &amp; Innovator
-            <span class="badge">🎉</span>
-          </div>
-          <div class="exp-sub">
-            SpeakingLearningApp: Eigoイスト —
-            <a href="https://github.com/jphacks/sd_2401" target="_blank" rel="noopener">GitHub</a>
+      <!-- ── Interests ── -->
+      <section>
+        <div class="section-title">Interests</div>
+        <div class="card">
+          <div class="tag-list">
+            <span class="tag">Vision &amp; Language</span>
+            <span class="tag">Natural Language Processing</span>
+            <span class="tag">Large Visual Language Models</span>
+            <span class="tag">Shitsukan (Material Perception)</span>
+            <span class="tag" data-en="Text-to-Video models" data-ja="動画分析"
+              >Text-to-Video models</span
+            >
           </div>
         </div>
-        <div class="exp-item">
-          <div class="exp-title">
-            Tohoku University Early Graduation
-            <span class="badge">🌸</span>
-          </div>
-          <div class="exp-sub">
-            Graduated Tohoku University (Bachelor) in 3 years!
+      </section>
+
+      <!-- ── Biography ── -->
+      <section>
+        <div class="section-title" data-en="Biography" data-ja="経歴">
+          Biography
+        </div>
+        <div class="card">
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-date">2003.07</div>
+              <div class="timeline-title">Born</div>
+              <div class="timeline-body">
+                <a
+                  href="https://en.wikipedia.org/wiki/Iwate_Prefecture"
+                  target="_blank"
+                  rel="noopener"
+                  >Iwate</a
+                >, Japan
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-date">2022.04</div>
+              <div
+                class="timeline-title"
+                data-en="Tohoku University — Bachelor"
+                data-ja="東北大学 — 学士"
+              >
+                Tohoku University — Bachelor
+              </div>
+              <div
+                class="timeline-body"
+                data-en="Department of Electrical, Information and Physics Engineering, School of Engineering"
+                data-ja="電気情報物理工学科, 工学部"
+              >
+                Department of Electrical, Information and Physics Engineering,
+                School of Engineering
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-date">2025.04</div>
+              <div
+                class="timeline-title"
+                data-en="Tohoku University — Master"
+                data-ja="東北大学 — 修士"
+              >
+                Tohoku University — Master
+              </div>
+              <div
+                class="timeline-body"
+                data-en="Fundamental Artificial Intelligence, Department of System Information Sciences, Graduate School of Information Sciences"
+                data-ja="基礎人工知能, システム情報科学専攻, 情報科学研究科"
+              >
+                Fundamental Artificial Intelligence, Department of System
+                Information Sciences, Graduate School of Information Sciences
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-  </section>
+      </section>
 
-</div>
-</body>
+      <!-- ── Publications ── -->
+      <section>
+        <div class="section-title" data-en="Publications" data-ja="発表論文">
+          Publications
+        </div>
+        <div class="card">
+          <div class="pub-list">
+            <!-- [1] NLP 2026 -->
+            <div class="pub-item" id="pub-1">
+              <div class="pub-top">
+                <div class="pub-thumb-wrap">
+                  <img
+                    class="pub-thumb"
+                    src="material/images/nlp2026_video_fig1.png"
+                    alt="NLP 2026 figure"
+                  />
+                </div>
+                <div class="pub-body">
+                  <div class="pub-num-title">
+                    <span class="pub-num">[1]</span>
+                    <span class="pub-title"
+                      >⻑尺動画⽣成タスクにおけるメタ評価ベンチマーク</span
+                    >
+                  </div>
+                  <div class="pub-authors">
+                    <strong>松⽥ 陵佑</strong>, ⼯藤 慧⾳, 吉⽥ 遥⾳, 清⽔ 伸幸,
+                    鈴⽊ 潤
+                  </div>
+                  <div class="pub-venue">
+                    <em>言語処理学会第32回年次大会（NLP 2026）</em>, 宇都宮,
+                    栃木, pp.XXXX-XXXX, March 2026.
+                  </div>
+                  <div class="pub-actions">
+                    <div class="pub-links">
+                      <a class="pub-link" href="#" onclick="return false;"
+                        >Paper (coming soon)</a
+                      >
+                      <a class="pub-link" href="#" onclick="return false;"
+                        >Poster (coming soon)</a
+                      >
+                    </div>
+                    <button
+                      class="pub-abstract-btn"
+                      aria-expanded="false"
+                      aria-controls="abstract-1"
+                    >
+                      Abstract
+                      <svg
+                        class="chevron"
+                        width="13"
+                        height="13"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="m6 9 6 6 6-6" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="pub-abstract-wrap">
+                <div class="pub-abstract-inner">
+                  <div class="pub-abstract" id="abstract-1">
+                    <div class="pub-abstract-label">Abstract</div>
+                    動画生成モデルの評価システム自体の性能をメタ評価するためのベンチマーク
+                    SLVMEval を提案する．SLVMEval
+                    は合成的に構築された，高品質動画と低品質動画のペアからなる．これらの動画は平均約
+                    19 分，最大約 3
+                    時間の長尺動画となっている．評価システムは，与えられた動画ペアのどちらが高品質であるかを識別できる割合（正解率）によって評価される．実験の結果，既存の自動評価システムは
+                    10 観点中 9
+                    観点で人間の正解率に及ばず，特にプロンプトと動画の一貫性に関する観点で性能が著しく低いことを明らかにした．
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- [2] NLP 2025 -->
+            <div class="pub-item" id="pub-2">
+              <div class="pub-top">
+                <div class="pub-thumb-wrap">
+                  <img
+                    class="pub-thumb"
+                    src="material/images/nlp2025_shitsukan_fig1.png"
+                    alt="NLP 2025 figure"
+                  />
+                </div>
+                <div class="pub-body">
+                  <div class="pub-num-title">
+                    <span class="pub-num">[2]</span>
+                    <span
+                      class="pub-title"
+                      data-en="Analysis of Material Perception Capabilities in Large-Scale Visual Language Models"
+                      data-ja="大規模視覚言語モデルの質感知覚能力の分析"
+                    >
+                      大規模視覚言語モデルの質感知覚能力の分析
+                    </span>
+                  </div>
+                  <div class="pub-authors">
+                    <strong data-en="Ryosuke Matsuda" data-ja="松田陵佑"
+                      >松田陵佑</strong
+                    >, 塩野大輝, Ana Brasard, 鈴木潤
+                  </div>
+                  <div class="pub-venue">
+                    <em>言語処理学会第31回年次大会（NLP 2025）</em>, 長崎,
+                    pp.2550–2555, March 2025.
+                  </div>
+                  <div class="pub-actions">
+                    <div class="pub-links">
+                      <a
+                        class="pub-link"
+                        href="https://www.anlp.jp/proceedings/annual_meeting/2025/pdf_dir/Q6-14.pdf"
+                        target="_blank"
+                        rel="noopener"
+                        >Paper</a
+                      >
+                      <a
+                        class="pub-link"
+                        href="material/pdf/NLP2025_shitsukan_Poster.pdf"
+                        target="_blank"
+                        rel="noopener"
+                        >Poster</a
+                      >
+                    </div>
+                    <button
+                      class="pub-abstract-btn"
+                      aria-expanded="false"
+                      aria-controls="abstract-2"
+                    >
+                      Abstract
+                      <svg
+                        class="chevron"
+                        width="13"
+                        height="13"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="m6 9 6 6 6-6" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="pub-abstract-wrap">
+                <div class="pub-abstract-inner">
+                  <div class="pub-abstract" id="abstract-2">
+                    <div class="pub-abstract-label">Abstract</div>
+                    本研究では，「質感」に焦点を当て，大規模視覚言語モデル（LVLM）の質感知覚能力を調査し，さらに
+                    LVLM
+                    と人間との間の質感知覚の整合性を分析することを目的とする．はじめに画像内の物体に対して人間が知覚する質感語を人手で収集した．次に，収集した質感語をもとに，LVLM
+                    が適切な質感語を選択できるか評価する分類タスクを設計し，LVLM
+                    と人間の正解率を算出した．また，LVLM
+                    に質感語を生成させ，その出力を人間が評価する生成タスクも実施した．最終的には，分類タスクの正解率が高い
+                    LVLM
+                    は，生成タスクにおいても高いスコアを示すことを確認し，分類タスクが，LVLM
+                    の質感知覚能力の評価だけでなく，人間知覚の整合性まで簡易に評価できる可能性があることを示す．
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Activity ── -->
+      <section>
+        <div class="section-title">Activity</div>
+        <div class="card">
+          <div class="exp-list">
+            <div class="exp-item">
+              <div class="exp-title">Teaching Assistant (TA)</div>
+              <div class="exp-description">
+                <ul>
+                  <li>
+                    <strong
+                      >Technical Support · Tohoku University · 2025.04 -
+                      2027.03</strong
+                    ><br />
+                    Provide learning support and ICT consultations at Kawanai
+                    North Campus.
+                  </li>
+                  <li>
+                    <strong
+                      >TIS Lecture · Tohoku University · 2025.10 -
+                      2026.03</strong
+                    ><br />
+                    TIS Lecture: Practical Lecture of System Integration for AI
+                    Era 2025
+                  </li>
+                  <li>
+                    <strong
+                      >Generative AI App Development · Tohoku University ·
+                      2025.04 - 2025.08</strong
+                    ><br />
+                    Teaching Assistant for the course on developing practical
+                    applications using generative AI.
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="exp-item">
+              <div class="exp-title">Research Assistant (RA)</div>
+              <div class="exp-description">
+                <ul>
+                  <li>
+                    <strong
+                      >LINE Yahoo Corporation · Part-time · 2025.03 -
+                      Present</strong
+                    ><br />
+                    Research collaboration with LINE Yahoo as RA.
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Awards ── -->
+      <section>
+        <div class="section-title">Awards</div>
+        <div class="card">
+          <div class="exp-list">
+            <div class="exp-item">
+              <div class="pub-top">
+                <div class="pub-thumb-wrap">
+                  <img
+                    class="pub-thumb"
+                    src="material/images/Eigoist.png"
+                    alt="Eigoイスト"
+                  />
+                </div>
+                <div>
+                  <div class="exp-title">
+                    <span>JPHACKS 2024<span class="badge">🎉</span></span>
+                  </div>
+                  <div class="exp-sub">
+                    <a
+                      href="https://github.com/jphacks/sd_2401"
+                      target="_blank"
+                      rel="noopener"
+                      >SpeakingLearningApp: Eigoイスト</a
+                    >
+                  </div>
+                  <div class="exp-description">
+                    <ul>
+                      <li>
+                        <a
+                          href="https://jphacks.com/2024/result/"
+                          target="_blank"
+                          rel="noopener"
+                          >イノベーター認定 (7/98 = 7.1%)</a
+                        >
+                      </li>
+                      <li>
+                        <a
+                          href="https://jphacks.com/2024/result/"
+                          target="_blank"
+                          rel="noopener"
+                          >スポンサー賞 (ウルシステムズ株式会社賞)</a
+                        >
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="exp-item">
+              <div class="pub-top">
+                <div class="pub-thumb-wrap">
+                  <img class="pub-thumb" src="material/images/bachelor.jpg" alt="Early Graduation" />
+                </div>
+                <div>
+                  <div class="exp-title">
+                    <span
+                      >Tohoku University Early Graduation
+                      <span class="badge">🌸</span></span
+                    >
+                  </div>
+                  <div class="exp-sub">
+                    Graduated Tohoku University (Bachelor) in 3 years!
+                    <span class="early-note">(5/2402 ≒ 0.21 %)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Skills ── -->
+      <section>
+        <div class="section-title">Skills</div>
+        <div class="card">
+          <div class="tag-list">
+            <span class="tag">Python</span>
+            <span class="tag">C++</span>
+            <span class="tag">SwiftUI</span>
+            <span class="tag">AWS</span>
+            <span class="tag">Docker/Singularity</span>
+            <span class="tag">Coding Agent</span>
+          </div>
+        </div>
+      </section>
+    </div>
+    <!-- ── Lightbox ── -->
+    <div
+      class="lightbox"
+      id="lightbox"
+      role="dialog"
+      aria-modal="true"
+      aria-label="拡大表示"
+    >
+      <button
+        class="lightbox-close-btn"
+        id="lightbox-close"
+        aria-label="閉じる"
+      >
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M18 6 6 18M6 6l12 12" />
+        </svg>
+      </button>
+      <img id="lightbox-img" src="" alt="" />
+      <iframe
+        id="lightbox-pdf"
+        src=""
+        title="PDF viewer"
+        frameborder="0"
+        allowfullscreen
+      ></iframe>
+    </div>
+
+    <script>
+      const photo = document.querySelector(".profile-photo");
+      const lightbox = document.getElementById("lightbox");
+      const lightboxImg = document.getElementById("lightbox-img");
+      const lightboxPdf = document.getElementById("lightbox-pdf");
+      const lightboxClose = document.getElementById("lightbox-close");
+
+      function openLightboxImg(src, alt) {
+        lightboxImg.src = src;
+        lightboxImg.alt = alt;
+        lightboxImg.style.display = "block";
+        lightboxPdf.style.display = "none";
+        lightboxPdf.src = "";
+        lightbox.style.cursor = "zoom-out";
+        lightbox.classList.add("open");
+        document.body.style.overflow = "hidden";
+      }
+
+      function openLightboxPdf(pdfSrc) {
+        lightboxImg.style.display = "none";
+        lightboxImg.src = "";
+        lightboxPdf.src = pdfSrc;
+        lightboxPdf.style.display = "block";
+        lightbox.style.cursor = "default";
+        lightbox.classList.add("open");
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeLightbox() {
+        lightbox.classList.remove("open");
+        document.body.style.overflow = "";
+        // Delay clearing PDF src to avoid white-flash during fade-out
+        setTimeout(() => {
+          lightboxPdf.src = "";
+        }, 280);
+      }
+
+      // Profile photo — double-click to enlarge
+      photo.addEventListener("dblclick", () =>
+        openLightboxImg(photo.src, photo.alt),
+      );
+
+      // Click backdrop to close (works for img; for PDF user uses close btn)
+      lightbox.addEventListener("click", (e) => {
+        if (e.target === lightbox) closeLightbox();
+      });
+
+      lightboxClose.addEventListener("click", closeLightbox);
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeLightbox();
+      });
+
+      // Email popup
+      const emailIconBtn = document.getElementById("email-icon-btn");
+      const emailPopup = document.getElementById("email-popup");
+      const emailCopyBtn = document.getElementById("email-copy-btn");
+      const EMAIL_ADDR = "matsuda.ryosuke@dc.tohoku.ac.jp";
+
+      emailIconBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        const isOpen = emailPopup.classList.toggle("open");
+        emailIconBtn.setAttribute("aria-expanded", isOpen);
+      });
+
+      emailCopyBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        navigator.clipboard
+          .writeText(EMAIL_ADDR)
+          .then(() => {
+            emailCopyBtn.textContent = "✓ Copied";
+            emailCopyBtn.classList.add("copied");
+            setTimeout(() => {
+              emailCopyBtn.textContent = "Copy";
+              emailCopyBtn.classList.remove("copied");
+            }, 2000);
+          })
+          .catch(() => {
+            // fallback: select text
+            const range = document.createRange();
+            range.selectNode(document.querySelector(".email-popup-addr"));
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+          });
+      });
+
+      document.addEventListener("click", (e) => {
+        if (!emailIconBtn.closest(".email-wrap").contains(e.target)) {
+          emailPopup.classList.remove("open");
+          emailIconBtn.setAttribute("aria-expanded", false);
+        }
+      });
+
+      // Publication thumbnails — double-click to enlarge image
+      document.querySelectorAll(".pub-thumb-wrap").forEach((wrap) => {
+        wrap.addEventListener("dblclick", () => {
+          const img = wrap.querySelector(".pub-thumb");
+          if (img) openLightboxImg(img.src, img.alt);
+        });
+      });
+
+      // Abstract accordion
+      document.querySelectorAll(".pub-abstract-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const item = btn.closest(".pub-item");
+          const isExpanded = item.classList.toggle("expanded");
+          btn.setAttribute("aria-expanded", isExpanded);
+        });
+      });
+    </script>
+  </body>
 </html>
