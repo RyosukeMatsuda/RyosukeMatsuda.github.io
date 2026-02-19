@@ -737,21 +737,28 @@
           margin-left: 0;
         }
 
-        /* Publications: stack content in column, thumbnail absolute at bottom-right */
-        .pub-list .pub-top {
-          position: relative;
-          flex-direction: column;
-        }
+        /* Publications: hide thumbnail on mobile */
         .pub-list .pub-thumb-wrap {
-          position: absolute;
-          right: 0;
-          bottom: 0;
+          display: none;
         }
-        .pub-list .pub-body {
-          width: 100%;
+
+        /* Publications: equal-width buttons in a row */
+        .pub-list .pub-links {
+          display: contents; /* lift Paper/Poster into pub-actions flex */
         }
         .pub-list .pub-actions {
-          padding-right: 116px; /* reserve space for thumbnail (100px + 16px gap) */
+          gap: 6px;
+        }
+        .pub-list .pub-link,
+        .pub-list .pub-abstract-btn {
+          flex: 1;
+          justify-content: center;
+          text-align: center;
+        }
+
+        /* Hide coming-soon links on mobile; Abstract button fills full width */
+        .pub-link-soon {
+          display: none;
         }
 
         /* Awards: thumbnail on the right */
@@ -1109,10 +1116,10 @@
                   </div>
                   <div class="pub-actions">
                     <div class="pub-links">
-                      <a class="pub-link" href="#" onclick="return false;"
+                      <a class="pub-link pub-link-soon" href="#" onclick="return false;"
                         >Paper (coming soon)</a
                       >
-                      <a class="pub-link" href="#" onclick="return false;"
+                      <a class="pub-link pub-link-soon" href="#" onclick="return false;"
                         >Poster (coming soon)</a
                       >
                     </div>
