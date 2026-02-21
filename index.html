@@ -1089,38 +1089,35 @@
         </div>
         <div class="card">
           <div class="pub-list">
-            <!-- [1] NLP 2026 -->
+            <!-- [1] CVPR 2026 -->
             <div class="pub-item" id="pub-1">
               <div class="pub-top">
                 <div class="pub-thumb-wrap">
                   <img
                     class="pub-thumb"
-                    src="material/images/nlp2026_video_fig1.png"
-                    alt="NLP 2026 figure"
+                    src="material/images/cvpr2026_video_fig_video.png"
+                    alt="CVPR 2026 figure"
                   />
                 </div>
                 <div class="pub-body">
                   <div class="pub-num-title">
                     <span class="pub-num">[1]</span>
                     <span class="pub-title"
-                      >⻑尺動画⽣成タスクにおけるメタ評価ベンチマーク</span
+                      >SLVMEval: Synthetic Meta Evaluation Benchmark for Text-to-Long Video Generation</span
                     >
                   </div>
                   <div class="pub-authors">
-                    <strong>松⽥ 陵佑</strong>, ⼯藤 慧⾳, 吉⽥ 遥⾳, 清⽔ 伸幸,
-                    鈴⽊ 潤
+                    <strong>Ryosuke Matsuda</strong>, Keito Kudo, Haruto Yoshida,
+                    Nobuyuki Shimizu, Jun Suzuki
                   </div>
                   <div class="pub-venue">
-                    <em>言語処理学会第32回年次大会（NLP 2026）</em>, 宇都宮,
-                    栃木, pp.XXXX-XXXX, March 2026.
+                    <em>The IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR 2026)</em>,
+                    Denver, CO, June 2026.
                   </div>
                   <div class="pub-actions">
                     <div class="pub-links">
                       <a class="pub-link pub-link-soon" href="#" onclick="return false;"
                         >Paper (coming soon)</a
-                      >
-                      <a class="pub-link pub-link-soon" href="#" onclick="return false;"
-                        >Poster (coming soon)</a
                       >
                     </div>
                     <button
@@ -1151,6 +1148,84 @@
                 <div class="pub-abstract-inner">
                   <div class="pub-abstract" id="abstract-1">
                     <div class="pub-abstract-label">Abstract</div>
+                    We introduce SLVMEval, a benchmark for meta-evaluating text-to-video (T2V) evaluation systems.
+                    SLVMEval focuses on assessing these systems on long videos of up to 10,486 seconds (approximately 3 hours).
+                    Our benchmark targets a fundamental requirement: whether systems can accurately judge video quality
+                    in settings that are easy for humans to assess. We adopt a pairwise comparison-based meta-evaluation framework.
+                    Building on dense video captioning datasets, we synthetically degrade source videos to create controlled
+                    "high-quality vs. low-quality" pairs across 10 distinct aspects. We then use crowdsourcing to filter and
+                    retain only those pairs in which the degradation is clearly perceptible, thereby establishing the final testbed.
+                    Using this testbed, we assess the reliability of existing evaluation systems in ranking these pairs.
+                    Our experiments show that human evaluators identify the better long video with 84.7%–96.8% accuracy,
+                    while in 9 of the 10 aspects, the accuracy of these systems falls short of human judgment,
+                    revealing weaknesses in text-to-long video evaluation.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- [2] NLP 2026 -->
+            <div class="pub-item" id="pub-2">
+              <div class="pub-top">
+                <div class="pub-thumb-wrap">
+                  <img
+                    class="pub-thumb"
+                    src="material/images/nlp2026_video_fig1.png"
+                    alt="NLP 2026 figure"
+                  />
+                </div>
+                <div class="pub-body">
+                  <div class="pub-num-title">
+                    <span class="pub-num">[2]</span>
+                    <span class="pub-title"
+                      >⻑尺動画⽣成タスクにおけるメタ評価ベンチマーク</span
+                    >
+                  </div>
+                  <div class="pub-authors">
+                    <strong>松⽥ 陵佑</strong>, ⼯藤 慧⾳, 吉⽥ 遥⾳, 清⽔ 伸幸,
+                    鈴⽊ 潤
+                  </div>
+                  <div class="pub-venue">
+                    <em>言語処理学会第32回年次大会（NLP 2026）</em>, 宇都宮,
+                    栃木, pp.XXXX-XXXX, March 2026.
+                  </div>
+                  <div class="pub-actions">
+                    <div class="pub-links">
+                      <a class="pub-link pub-link-soon" href="#" onclick="return false;"
+                        >Paper (coming soon)</a
+                      >
+                      <a class="pub-link pub-link-soon" href="#" onclick="return false;"
+                        >Poster (coming soon)</a
+                      >
+                    </div>
+                    <button
+                      class="pub-abstract-btn"
+                      aria-expanded="false"
+                      aria-controls="abstract-2"
+                    >
+                      Abstract
+                      <svg
+                        class="chevron"
+                        width="13"
+                        height="13"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="m6 9 6 6 6-6" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="pub-abstract-wrap">
+                <div class="pub-abstract-inner">
+                  <div class="pub-abstract" id="abstract-2">
+                    <div class="pub-abstract-label">Abstract</div>
                     動画生成モデルの評価システム自体の性能をメタ評価するためのベンチマーク
                     SLVMEval を提案する．SLVMEval
                     は合成的に構築された，高品質動画と低品質動画のペアからなる．これらの動画は平均約
@@ -1163,8 +1238,8 @@
               </div>
             </div>
 
-            <!-- [2] NLP 2025 -->
-            <div class="pub-item" id="pub-2">
+            <!-- [3] NLP 2025 -->
+            <div class="pub-item" id="pub-3">
               <div class="pub-top">
                 <div class="pub-thumb-wrap">
                   <img
@@ -1175,7 +1250,7 @@
                 </div>
                 <div class="pub-body">
                   <div class="pub-num-title">
-                    <span class="pub-num">[2]</span>
+                    <span class="pub-num">[3]</span>
                     <span
                       class="pub-title"
                       data-en="Analysis of Material Perception Capabilities in Large-Scale Visual Language Models"
@@ -1213,7 +1288,7 @@
                     <button
                       class="pub-abstract-btn"
                       aria-expanded="false"
-                      aria-controls="abstract-2"
+                      aria-controls="abstract-3"
                     >
                       Abstract
                       <svg
@@ -1236,7 +1311,7 @@
               </div>
               <div class="pub-abstract-wrap">
                 <div class="pub-abstract-inner">
-                  <div class="pub-abstract" id="abstract-2">
+                  <div class="pub-abstract" id="abstract-3">
                     <div class="pub-abstract-label">Abstract</div>
                     本研究では，「質感」に焦点を当て，大規模視覚言語モデル（LVLM）の質感知覚能力を調査し，さらに
                     LVLM
