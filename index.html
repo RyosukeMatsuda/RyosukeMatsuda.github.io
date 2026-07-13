@@ -69,6 +69,12 @@
         section:nth-of-type(6) {
           animation: fadeInUp 0.5s 0.38s ease both;
         }
+        section:nth-of-type(7) {
+          animation: fadeInUp 0.5s 0.44s ease both;
+        }
+        section:nth-of-type(8) {
+          animation: fadeInUp 0.5s 0.5s ease both;
+        }
       }
 
       html {
@@ -656,20 +662,6 @@
         font-weight: 500;
       }
 
-      /* ── Thumb icon placeholder (no image) ── */
-      .thumb-icon {
-        width: 136px;
-        height: 96px;
-        border-radius: 8px;
-        border: 1px solid var(--accent-border);
-        background: linear-gradient(135deg, var(--accent-light) 0%, #bbf7d0 100%);
-        flex-shrink: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2.4rem;
-      }
-
       /* ── Responsive: Mobile (≤ 640px) ── */
       @media (max-width: 640px) {
         .page {
@@ -732,7 +724,6 @@
         .pub-thumb {
           height: 72px;
         }
-        .thumb-icon { width: 100px; height: 72px; font-size: 2rem; }
         .pub-abstract-btn {
           margin-left: 0;
         }
@@ -1082,11 +1073,9 @@
         </div>
       </section>
 
-      <!-- ── Publications ── -->
+      <!-- ── International Conferences ── -->
       <section>
-        <div class="section-title" data-en="Publications" data-ja="発表論文">
-          Publications
-        </div>
+        <div class="section-title">International Conferences</div>
         <div class="card">
           <div class="pub-list">
             <!-- [1] CVPR 2026 -->
@@ -1116,8 +1105,26 @@
                   </div>
                   <div class="pub-actions">
                     <div class="pub-links">
-                      <a class="pub-link" href="https://arxiv.org/abs/2603.29186" target="_blank"
+                      <a
+                        class="pub-link"
+                        href="https://arxiv.org/abs/2603.29186"
+                        target="_blank"
+                        rel="noopener"
                         >Paper</a
+                      >
+                      <a
+                        class="pub-link"
+                        href="material/pdf/CVPR2026_SLVMEval_Poster.pdf"
+                        target="_blank"
+                        rel="noopener"
+                        >Poster</a
+                      >
+                      <a
+                        class="pub-link"
+                        href="https://slvmeval.github.io/"
+                        target="_blank"
+                        rel="noopener"
+                        >Website</a
                       >
                     </div>
                     <button
@@ -1164,8 +1171,100 @@
               </div>
             </div>
 
-            <!-- [2] NLP 2026 -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ── arXiv ── -->
+      <section>
+        <div class="section-title">arXiv</div>
+        <div class="card">
+          <div class="pub-list">
+            <!-- [2] Sumi -->
             <div class="pub-item" id="pub-2">
+              <div class="pub-top">
+                <div class="pub-thumb-wrap">
+                  <img
+                    class="pub-thumb"
+                    src="material/images/SUMI_overview.png"
+                    alt="Sumi overview"
+                  />
+                </div>
+                <div class="pub-body">
+                  <div class="pub-num-title">
+                    <span class="pub-num">[2]</span>
+                    <span class="pub-title"
+                      >Sumi: Open Uniform Diffusion Language Model from Scratch</span
+                    >
+                  </div>
+                  <div class="pub-authors">
+                    Mengyu Ye, Keito Kudo, Wataru Ikeda,
+                    <strong>Ryosuke Matsuda</strong>, Keisuke Sakaguchi, Jun Suzuki
+                  </div>
+                  <div class="pub-venue">
+                    <em>arXiv preprint arXiv:2606.19005</em>, June 2026.
+                  </div>
+                  <div class="pub-actions">
+                    <div class="pub-links">
+                      <a
+                        class="pub-link"
+                        href="https://arxiv.org/abs/2606.19005"
+                        target="_blank"
+                        rel="noopener"
+                        >Paper</a
+                      >
+                      <a
+                        class="pub-link"
+                        href="https://www.nlp.ecei.tohoku.ac.jp/projects/sumi/#cite"
+                        target="_blank"
+                        rel="noopener"
+                        >Website</a
+                      >
+                    </div>
+                    <button
+                      class="pub-abstract-btn"
+                      aria-expanded="false"
+                      aria-controls="abstract-2"
+                    >
+                      Abstract
+                      <svg
+                        class="chevron"
+                        width="13"
+                        height="13"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="m6 9 6 6 6-6" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="pub-abstract-wrap">
+                <div class="pub-abstract-inner">
+                  <div class="pub-abstract" id="abstract-2">
+                    <div class="pub-abstract-label">Abstract</div>
+                    Diffusion models have become a promising alternative to autoregressive models. Among these, uniform diffusion language models (UDLMs) permit any token to be updated at any step, in principle enabling more flexible generation. However, no UDLM has yet been pretrained from scratch at both large parameter scale and large token budget. Both autoregressive modeling and masked diffusion modeling already have capable models at scale that the community can study and build on; uniform diffusion has none. A scratch-pretrained UDLM at scale would provide a clean reference point for studying scaling behavior, generation dynamics, controllability, and trade-offs against established autoregressive and masked diffusion models. To this end, we introduce Sumi ("ink" in Japanese), a fully open 7B uniform diffusion language model pretrained from scratch on 1.5T tokens. Sumi performs competitively with autoregressive models trained at comparable token budgets on knowledge, reasoning, and coding benchmarks, while under-performing on commonsense benchmarks, where our education-heavy data mixture is a likely contributor. We release our model weights, checkpoints, and full training recipe, including a complete specification of the data mixture over publicly available corpora. We hope this release enables the community to study native uniform diffusion at scale and catalyzes work on its as-yet poorly understood aspects.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Domestic Conferences / Symposium ── -->
+      <section>
+        <div class="section-title">Domestic Conferences / Symposium</div>
+        <div class="card">
+          <div class="pub-list">
+            <!-- [3] NLP 2026 -->
+            <div class="pub-item" id="pub-3">
               <div class="pub-top">
                 <div class="pub-thumb-wrap">
                   <img
@@ -1176,7 +1275,7 @@
                 </div>
                 <div class="pub-body">
                   <div class="pub-num-title">
-                    <span class="pub-num">[2]</span>
+                    <span class="pub-num">[3]</span>
                     <span class="pub-title"
                       >⻑尺動画⽣成タスクにおけるメタ評価ベンチマーク</span
                     >
@@ -1209,7 +1308,7 @@
                     <button
                       class="pub-abstract-btn"
                       aria-expanded="false"
-                      aria-controls="abstract-2"
+                      aria-controls="abstract-3"
                     >
                       Abstract
                       <svg
@@ -1232,7 +1331,7 @@
               </div>
               <div class="pub-abstract-wrap">
                 <div class="pub-abstract-inner">
-                  <div class="pub-abstract" id="abstract-2">
+                  <div class="pub-abstract" id="abstract-3">
                     <div class="pub-abstract-label">Abstract</div>
                     動画生成モデルの評価システム自体の性能をメタ評価するためのベンチマーク
                     SLVMEval を提案する．SLVMEval
@@ -1246,8 +1345,8 @@
               </div>
             </div>
 
-            <!-- [3] NLP 2025 -->
-            <div class="pub-item" id="pub-3">
+            <!-- [4] NLP 2025 -->
+            <div class="pub-item" id="pub-4">
               <div class="pub-top">
                 <div class="pub-thumb-wrap">
                   <img
@@ -1258,7 +1357,7 @@
                 </div>
                 <div class="pub-body">
                   <div class="pub-num-title">
-                    <span class="pub-num">[3]</span>
+                    <span class="pub-num">[4]</span>
                     <span
                       class="pub-title"
                       data-en="Analysis of Material Perception Capabilities in Large-Scale Visual Language Models"
@@ -1296,7 +1395,7 @@
                     <button
                       class="pub-abstract-btn"
                       aria-expanded="false"
-                      aria-controls="abstract-3"
+                      aria-controls="abstract-4"
                     >
                       Abstract
                       <svg
@@ -1319,7 +1418,7 @@
               </div>
               <div class="pub-abstract-wrap">
                 <div class="pub-abstract-inner">
-                  <div class="pub-abstract" id="abstract-3">
+                  <div class="pub-abstract" id="abstract-4">
                     <div class="pub-abstract-label">Abstract</div>
                     本研究では，「質感」に焦点を当て，大規模視覚言語モデル（LVLM）の質感知覚能力を調査し，さらに
                     LVLM
@@ -1384,6 +1483,27 @@
                       Present</strong
                     ><br />
                     Research collaboration with LINE Yahoo as RA.
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="exp-item">
+              <div class="exp-title">Research Fellowship / Scholarship</div>
+              <div class="exp-description">
+                <ul>
+                  <li>
+                    <strong
+                      ><a
+                        href="https://gp-ds.tohoku.ac.jp/en/overview/illustration.html"
+                        target="_blank"
+                        rel="noopener"
+                        >Graduate Program in Data Science</a
+                      > · 2026-4 - Present
+                      <span class="early-note">(Approx. 20%)</span></strong
+                    ><br />
+                    An interdisciplinary integrated data science education program
+                    that develops human resources with information utilization
+                    capabilities.
                   </li>
                 </ul>
               </div>
