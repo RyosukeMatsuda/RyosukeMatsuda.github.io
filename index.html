@@ -602,6 +602,12 @@
         color: var(--muted);
         margin-bottom: 3px;
       }
+      /* 自分の名前（<strong>）は太字 + 下線で強調する */
+      .pub-authors strong {
+        text-decoration: underline;
+        text-underline-offset: 3px;
+        text-decoration-thickness: 1px;
+      }
       .pub-venue {
         font-size: 0.83rem;
         color: var(--text-secondary);
@@ -753,6 +759,7 @@
       .badge {
         display: inline-flex;
         align-items: center;
+        gap: 4px;
         background: #fef9c3;
         color: #92400e;
         border: 1px solid #fde68a;
@@ -761,6 +768,11 @@
         font-size: 0.75rem;
         font-weight: 700;
         letter-spacing: 0.01em;
+        vertical-align: middle;
+        white-space: nowrap;
+      }
+      .badge svg {
+        flex-shrink: 0;
       }
       .early-note {
         font-size: 0.8rem;
@@ -1175,7 +1187,7 @@
             </span>
             <span class="tag">
               <span class="en-only">Shitsukan (Material Perception)</span>
-              <span class="ja-only">質感（質感知覚）</span>
+              <span class="ja-only">質感知覚</span>
             </span>
             <span class="tag">
               <span class="en-only">Text-to-Video models</span>
@@ -1197,8 +1209,8 @@
               <div class="timeline-dot"></div>
               <div class="timeline-date">2003.07</div>
               <div class="timeline-title">
-                <span class="en-only">Born</span>
-                <span class="ja-only">誕生</span>
+                <span class="en-only">Hometown</span>
+                <span class="ja-only">出身</span>
               </div>
               <div class="timeline-body">
                 <span class="en-only">
@@ -1562,6 +1574,13 @@
             <!-- [3] YANS 2026 — Ryosuke Matsuda (first author) -->
             <div class="pub-item" id="pub-3">
               <div class="pub-top">
+                <div class="pub-thumb-wrap">
+                  <img
+                    class="pub-thumb"
+                    src="material/images/yans2026_ryosukematsuda.png"
+                    alt="YANS 2026 figure (fill-in-the-middle translation)"
+                  />
+                </div>
                 <div class="pub-body">
                   <div class="pub-num-title">
                     <span class="pub-num">[3]</span>
@@ -1673,6 +1692,13 @@
             <!-- [4] YANS 2026 — LLM-as-a-Judge -->
             <div class="pub-item" id="pub-4">
               <div class="pub-top">
+                <div class="pub-thumb-wrap">
+                  <img
+                    class="pub-thumb"
+                    src="material/images/yans2026_shotamatsuda.png"
+                    alt="YANS 2026 figure (Likert vs. ranking evaluation)"
+                  />
+                </div>
                 <div class="pub-body">
                   <div class="pub-num-title">
                     <span class="pub-num">[4]</span>
@@ -1708,6 +1734,24 @@
                     <span class="ja-only">
                       <em>NLP若手の会 第21回シンポジウム（YANS 2026）</em>, 仙台,
                       宮城, 2026年8月.
+                    </span>
+                    <span class="badge">
+                      <svg
+                        width="12"
+                        height="12"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <circle cx="12" cy="8" r="6" />
+                        <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11" />
+                      </svg>
+                      <span class="en-only">Encouragement Award</span>
+                      <span class="ja-only">奨励賞受賞</span>
                     </span>
                   </div>
                   <div class="pub-actions">
