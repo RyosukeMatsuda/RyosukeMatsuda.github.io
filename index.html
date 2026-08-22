@@ -4,6 +4,51 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Ryosuke Matsuda</title>
+
+    <!-- ══════════════════════════════════════════════════════════════
+         Google Analytics 4
+         測定 ID は https://analytics.google.com/ のデータストリームで確認できる。
+         差し替える場合は下の GA_MEASUREMENT_ID を書き換えるだけでよい。
+         （"XXXX" を含むプレースホルダの間は一切リクエストを送らない）
+         ══════════════════════════════════════════════════════════════ -->
+    <script>
+      window.GA_MEASUREMENT_ID = "G-0QK7LG13Z7";
+      (function () {
+        var id = window.GA_MEASUREMENT_ID;
+        if (!id || id.indexOf("XXXX") !== -1) return; // 未設定なら読み込まない
+        var s = document.createElement("script");
+        s.async = true;
+        s.src = "https://www.googletagmanager.com/gtag/js?id=" + id;
+        document.head.appendChild(s);
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = function () {
+          window.dataLayer.push(arguments);
+        };
+        window.gtag("js", new Date());
+        window.gtag("config", id);
+      })();
+    </script>
+
+    <!-- 言語の初期化（描画前に走らせてチラつきを防ぐ） -->
+    <script>
+      (function () {
+        var saved = null;
+        try {
+          saved = localStorage.getItem("site-lang");
+        } catch (e) {}
+        var lang =
+          saved === "ja" || saved === "en"
+            ? saved
+            : ((navigator.language || navigator.userLanguage || "en") + "")
+                  .toLowerCase()
+                  .indexOf("ja") === 0
+              ? "ja"
+              : "en";
+        document.documentElement.setAttribute("data-lang", lang);
+        document.documentElement.setAttribute("lang", lang);
+      })();
+    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -35,6 +80,15 @@
         --shadow: 0 1px 3px rgba(0, 0, 0, 0.07), 0 4px 16px rgba(0, 0, 0, 0.06);
         --shadow-hover:
           0 4px 16px rgba(0, 0, 0, 0.1), 0 12px 32px rgba(0, 0, 0, 0.08);
+      }
+
+      /* ── i18n: 表示言語に応じて片方だけを見せる ──
+         JS 無効時は英語表示にフォールバックする。 */
+      html:not([data-lang="ja"]) .ja-only {
+        display: none !important;
+      }
+      html[data-lang="ja"] .en-only {
+        display: none !important;
       }
 
       @media (prefers-reduced-motion: no-preference) {
@@ -87,6 +141,11 @@
           -apple-system,
           BlinkMacSystemFont,
           "Segoe UI",
+          "Hiragino Sans",
+          "Hiragino Kaku Gothic ProN",
+          "Yu Gothic",
+          "Noto Sans JP",
+          Meiryo,
           sans-serif;
         background: var(--bg);
         color: var(--text);
@@ -115,6 +174,50 @@
         max-width: 880px;
         margin: 0 auto;
         padding: 40px 20px 80px;
+      }
+
+      /* ── Top bar / Language switch ── */
+      .topbar {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 12px;
+      }
+      .lang-switch {
+        display: inline-flex;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 3px;
+        background: var(--card);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      }
+      .lang-btn {
+        appearance: none;
+        border: none;
+        background: transparent;
+        font: inherit;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        color: var(--muted);
+        padding: 5px 14px;
+        border-radius: 999px;
+        cursor: pointer;
+        transition:
+          background 0.18s ease,
+          color 0.18s ease;
+        line-height: 1.4;
+      }
+      .lang-btn:hover {
+        color: var(--accent);
+      }
+      .lang-btn:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+      html[data-lang="ja"] .lang-btn[data-set-lang="ja"],
+      html:not([data-lang="ja"]) .lang-btn[data-set-lang="en"] {
+        background: var(--accent);
+        color: #ffffff;
       }
 
       /* ── Profile Card ── */
@@ -352,6 +455,9 @@
         gap: 8px;
       }
       .tag {
+        /* inline-flex なので、en/ja 切替用 span 間の空白が余白として残らない */
+        display: inline-flex;
+        align-items: center;
         background: var(--accent-light);
         color: var(--accent);
         border: 1px solid var(--accent-border);
@@ -847,6 +953,28 @@
   </head>
   <body>
     <div class="page">
+      <!-- ── Language switch ── -->
+      <div class="topbar">
+        <div class="lang-switch" role="group" aria-label="Language / 言語">
+          <button
+            type="button"
+            class="lang-btn"
+            data-set-lang="en"
+            aria-label="English"
+          >
+            EN
+          </button>
+          <button
+            type="button"
+            class="lang-btn"
+            data-set-lang="ja"
+            aria-label="日本語"
+          >
+            日本語
+          </button>
+        </div>
+      </div>
+
       <!-- ── Profile ── -->
       <div class="profile">
         <div class="profile-banner"></div>
@@ -857,11 +985,17 @@
             alt="Ryosuke Matsuda"
             onerror="this.style.display = 'none'"
             style="cursor: zoom-in"
-            title="ダブルクリックで拡大"
+            title="ダブルクリックで拡大 / Double-click to enlarge"
           />
           <div class="profile-info">
-            <h1>Ryosuke Matsuda</h1>
-            <div class="subtitle">M2 · Tohoku University</div>
+            <h1>
+              <span class="en-only">Ryosuke Matsuda</span>
+              <span class="ja-only">松田 陵佑</span>
+            </h1>
+            <div class="subtitle">
+              <span class="en-only">M2 · Tohoku University</span>
+              <span class="ja-only">修士2年 · 東北大学</span>
+            </div>
             <div class="affiliations">
               <a
                 class="affil-link"
@@ -890,13 +1024,22 @@
                 />
               </a>
             </div>
-            <p>
-              Hello and welcome! I am a second-year master's student and a
-              member of the <strong>Tohoku NLP Group</strong> and
+            <p class="en-only">
+              Hello and welcome! I am a second-year master's student and a member
+              of the <strong>Tohoku NLP Group</strong> and
               <strong>FaiLab</strong>. My research interests are mainly in the
               area of large visual language models (LVLMs).<br />
               Currently, I am working on two research topics:
               <strong>Shitsukan</strong> and <strong>T2V models</strong>.
+            </p>
+            <p class="ja-only">
+              ご覧いただきありがとうございます．東北大学の修士2年で，<strong>Tohoku
+                NLP Group</strong>
+              および <strong>FaiLab</strong>
+              に所属しています．研究の主な関心は大規模視覚言語モデル（LVLM）です．<br />
+              現在は <strong>質感（Shitsukan）</strong> と
+              <strong>Text-to-Video モデル</strong>
+              という2つのテーマに取り組んでいます．
             </p>
             <div class="contact-links">
               <a
@@ -975,7 +1118,7 @@
                 <a
                   href="mailto:matsuda.ryosuke@dc.tohoku.ac.jp"
                   id="email-icon-btn"
-                  aria-label="メールアドレスを表示"
+                  aria-label="Show email address / メールアドレスを表示"
                   aria-expanded="false"
                 >
                   <svg
@@ -1003,7 +1146,8 @@
                       id="email-copy-btn"
                       type="button"
                     >
-                      コピー
+                      <span class="en-only">Copy</span>
+                      <span class="ja-only">コピー</span>
                     </button>
                   </div>
                 </div>
@@ -1015,76 +1159,97 @@
 
       <!-- ── Interests ── -->
       <section>
-        <div class="section-title">Interests</div>
+        <div class="section-title">
+          <span class="en-only">Interests</span>
+          <span class="ja-only">研究興味</span>
+        </div>
         <div class="card">
           <div class="tag-list">
-            <span class="tag">Vision &amp; Language</span>
-            <span class="tag">Natural Language Processing</span>
-            <span class="tag">Large Visual Language Models</span>
-            <span class="tag">Shitsukan (Material Perception)</span>
-            <span class="tag" data-en="Text-to-Video models" data-ja="動画分析"
-              >Text-to-Video models</span
-            >
+            <span class="tag">
+              <span class="en-only">Natural Language Processing</span>
+              <span class="ja-only">自然言語処理</span>
+            </span>
+            <span class="tag">
+              <span class="en-only">Large Visual Language Models</span>
+              <span class="ja-only">大規模視覚言語モデル</span>
+            </span>
+            <span class="tag">
+              <span class="en-only">Shitsukan (Material Perception)</span>
+              <span class="ja-only">質感（質感知覚）</span>
+            </span>
+            <span class="tag">
+              <span class="en-only">Text-to-Video models</span>
+              <span class="ja-only">Text-to-Video モデル（動画生成）</span>
+            </span>
           </div>
         </div>
       </section>
 
       <!-- ── Biography ── -->
       <section>
-        <div class="section-title" data-en="Biography" data-ja="経歴">
-          Biography
+        <div class="section-title">
+          <span class="en-only">Biography</span>
+          <span class="ja-only">経歴</span>
         </div>
         <div class="card">
           <div class="timeline">
             <div class="timeline-item">
               <div class="timeline-dot"></div>
               <div class="timeline-date">2003.07</div>
-              <div class="timeline-title">Born</div>
+              <div class="timeline-title">
+                <span class="en-only">Born</span>
+                <span class="ja-only">誕生</span>
+              </div>
               <div class="timeline-body">
-                <a
-                  href="https://en.wikipedia.org/wiki/Iwate_Prefecture"
-                  target="_blank"
-                  rel="noopener"
-                  >Iwate</a
-                >, Japan
+                <span class="en-only">
+                  <a
+                    href="https://en.wikipedia.org/wiki/Iwate_Prefecture"
+                    target="_blank"
+                    rel="noopener"
+                    >Iwate</a
+                  >, Japan
+                </span>
+                <span class="ja-only">
+                  <a
+                    href="https://ja.wikipedia.org/wiki/%E5%B2%A9%E6%89%8B%E7%9C%8C"
+                    target="_blank"
+                    rel="noopener"
+                    >岩手県</a
+                  >, 日本
+                </span>
               </div>
             </div>
             <div class="timeline-item">
               <div class="timeline-dot"></div>
               <div class="timeline-date">2022.04</div>
-              <div
-                class="timeline-title"
-                data-en="Tohoku University — Bachelor"
-                data-ja="東北大学 — 学士"
-              >
-                Tohoku University — Bachelor
+              <div class="timeline-title">
+                <span class="en-only">Tohoku University — Bachelor</span>
+                <span class="ja-only">東北大学 — 学士</span>
               </div>
-              <div
-                class="timeline-body"
-                data-en="Department of Electrical, Information and Physics Engineering, School of Engineering"
-                data-ja="電気情報物理工学科, 工学部"
-              >
-                Department of Electrical, Information and Physics Engineering,
-                School of Engineering
+              <div class="timeline-body">
+                <span class="en-only"
+                  >Department of Electrical, Information and Physics
+                  Engineering, School of Engineering</span
+                >
+                <span class="ja-only">工学部 電気情報物理工学科</span>
               </div>
             </div>
             <div class="timeline-item">
               <div class="timeline-dot"></div>
               <div class="timeline-date">2025.04</div>
-              <div
-                class="timeline-title"
-                data-en="Tohoku University — Master"
-                data-ja="東北大学 — 修士"
-              >
-                Tohoku University — Master
+              <div class="timeline-title">
+                <span class="en-only">Tohoku University — Master</span>
+                <span class="ja-only">東北大学 — 修士</span>
               </div>
-              <div
-                class="timeline-body"
-                data-en="Fundamental Artificial Intelligence, Department of System Information Sciences, Graduate School of Information Sciences"
-                data-ja="基礎人工知能, システム情報科学専攻, 情報科学研究科"
-              >
-                Fundamental Artificial Intelligence, Department of System
-                Information Sciences, Graduate School of Information Sciences
+              <div class="timeline-body">
+                <span class="en-only"
+                  >Fundamental Artificial Intelligence, Department of System
+                  Information Sciences, Graduate School of Information
+                  Sciences</span
+                >
+                <span class="ja-only"
+                  >情報科学研究科 システム情報科学専攻 基礎人工知能</span
+                >
               </div>
             </div>
           </div>
@@ -1093,7 +1258,10 @@
 
       <!-- ── International Conferences ── -->
       <section>
-        <div class="section-title">International Conferences</div>
+        <div class="section-title">
+          <span class="en-only">International Conferences</span>
+          <span class="ja-only">国際会議</span>
+        </div>
         <div class="card">
           <div class="pub-list">
             <!-- [1] CVPR 2026 -->
@@ -1110,16 +1278,33 @@
                   <div class="pub-num-title">
                     <span class="pub-num">[1]</span>
                     <span class="pub-title"
-                      >SLVMEval: Synthetic Meta Evaluation Benchmark for Text-to-Long Video Generation</span
+                      >SLVMEval: Synthetic Meta Evaluation Benchmark for
+                      Text-to-Long Video Generation</span
                     >
                   </div>
                   <div class="pub-authors">
-                    <strong>Ryosuke Matsuda</strong>, Keito Kudo, Haruto Yoshida,
-                    Nobuyuki Shimizu, Jun Suzuki
+                    <span class="en-only">
+                      <strong>Ryosuke Matsuda</strong>, Keito Kudo, Haruto
+                      Yoshida, Nobuyuki Shimizu, Jun Suzuki
+                    </span>
+                    <span class="ja-only">
+                      <strong>松田 陵佑</strong>, 工藤 慧音, 吉田 遥音, 清水
+                      伸幸, 鈴木 潤
+                    </span>
                   </div>
                   <div class="pub-venue">
-                    <em>The IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR 2026)</em>,
-                    Denver, CO, June 2026.
+                    <span class="en-only">
+                      <em
+                        >The IEEE/CVF Conference on Computer Vision and Pattern
+                        Recognition (CVPR 2026)</em
+                      >, Denver, CO, June 2026.
+                    </span>
+                    <span class="ja-only">
+                      <em
+                        >The IEEE/CVF Conference on Computer Vision and Pattern
+                        Recognition（CVPR 2026）</em
+                      >, デンバー, コロラド州, 2026年6月.
+                    </span>
                   </div>
                   <div class="pub-actions">
                     <div class="pub-links">
@@ -1128,29 +1313,36 @@
                         href="https://arxiv.org/abs/2603.29186"
                         target="_blank"
                         rel="noopener"
-                        >Paper</a
                       >
+                        <span class="en-only">Paper</span>
+                        <span class="ja-only">論文</span>
+                      </a>
                       <a
                         class="pub-link"
                         href="material/pdf/CVPR2026_SLVMEval_Poster.pdf"
                         target="_blank"
                         rel="noopener"
-                        >Poster</a
                       >
+                        <span class="en-only">Poster</span>
+                        <span class="ja-only">ポスター</span>
+                      </a>
                       <a
                         class="pub-link"
                         href="https://slvmeval.github.io/"
                         target="_blank"
                         rel="noopener"
-                        >Website</a
                       >
+                        <span class="en-only">Website</span>
+                        <span class="ja-only">ウェブサイト</span>
+                      </a>
                     </div>
                     <button
                       class="pub-abstract-btn"
                       aria-expanded="false"
                       aria-controls="abstract-1"
                     >
-                      Abstract
+                      <span class="en-only">Abstract</span>
+                      <span class="ja-only">概要</span>
                       <svg
                         class="chevron"
                         width="13"
@@ -1172,30 +1364,55 @@
               <div class="pub-abstract-wrap">
                 <div class="pub-abstract-inner">
                   <div class="pub-abstract" id="abstract-1">
-                    <div class="pub-abstract-label">Abstract</div>
-                    We introduce SLVMEval, a benchmark for meta-evaluating text-to-video (T2V) evaluation systems.
-                    SLVMEval focuses on assessing these systems on long videos of up to 10,486 seconds (approximately 3 hours).
-                    Our benchmark targets a fundamental requirement: whether systems can accurately judge video quality
-                    in settings that are easy for humans to assess. We adopt a pairwise comparison-based meta-evaluation framework.
-                    Building on dense video captioning datasets, we synthetically degrade source videos to create controlled
-                    "high-quality vs. low-quality" pairs across 10 distinct aspects. We then use crowdsourcing to filter and
-                    retain only those pairs in which the degradation is clearly perceptible, thereby establishing the final testbed.
-                    Using this testbed, we assess the reliability of existing evaluation systems in ranking these pairs.
-                    Our experiments show that human evaluators identify the better long video with 84.7%–96.8% accuracy,
-                    while in 9 of the 10 aspects, the accuracy of these systems falls short of human judgment,
-                    revealing weaknesses in text-to-long video evaluation.
+                    <div class="pub-abstract-label">
+                      <span class="en-only">Abstract</span>
+                      <span class="ja-only">概要</span>
+                    </div>
+                    <span class="en-only">
+                      We introduce SLVMEval, a benchmark for meta-evaluating
+                      text-to-video (T2V) evaluation systems. SLVMEval focuses on
+                      assessing these systems on long videos of up to 10,486
+                      seconds (approximately 3 hours). Our benchmark targets a
+                      fundamental requirement: whether systems can accurately
+                      judge video quality in settings that are easy for humans to
+                      assess. We adopt a pairwise comparison-based meta-evaluation
+                      framework. Building on dense video captioning datasets, we
+                      synthetically degrade source videos to create controlled
+                      "high-quality vs. low-quality" pairs across 10 distinct
+                      aspects. We then use crowdsourcing to filter and retain only
+                      those pairs in which the degradation is clearly perceptible,
+                      thereby establishing the final testbed. Using this testbed,
+                      we assess the reliability of existing evaluation systems in
+                      ranking these pairs. Our experiments show that human
+                      evaluators identify the better long video with 84.7%–96.8%
+                      accuracy, while in 9 of the 10 aspects, the accuracy of
+                      these systems falls short of human judgment, revealing
+                      weaknesses in text-to-long video evaluation.
+                    </span>
+                    <span class="ja-only">
+                      本研究では，テキストからの動画生成（T2V）の評価システムをメタ評価するためのベンチマーク
+                      SLVMEval を提案する．SLVMEval は，最長 10,486 秒（約 3
+                      時間）に及ぶ長尺動画を対象に評価システムの性能を測ることに焦点を当てる．本ベンチマークは，「人間にとって容易に判断できる設定において，評価システムが動画の品質を正しく判定できるか」という基礎的な要件を対象とする．メタ評価にはペアワイズ比較に基づく枠組みを採用した．詳細動画キャプションデータセットを基に，元動画を合成的に劣化させることで，10
+                      の観点それぞれについて統制された「高品質
+                      vs. 低品質」のペアを作成する．さらにクラウドソーシングにより，劣化が明確に知覚できるペアのみを残すようフィルタリングし，最終的なテストベッドを構築した．このテストベッドを用いて，既存の評価システムがこれらのペアを正しく順位づけできるかという信頼性を検証する．実験の結果，人間の評価者は
+                      84.7%〜96.8%
+                      の正解率でより良い長尺動画を判別できる一方，10 観点中 9
+                      観点で既存システムの正解率は人間の判断に及ばず，長尺動画生成の評価における弱点が明らかになった．
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
-
           </div>
         </div>
       </section>
 
       <!-- ── arXiv ── -->
       <section>
-        <div class="section-title">arXiv</div>
+        <div class="section-title">
+          <span class="en-only">arXiv</span>
+          <span class="ja-only">arXiv（プレプリント）</span>
+        </div>
         <div class="card">
           <div class="pub-list">
             <!-- [2] Sumi -->
@@ -1212,15 +1429,28 @@
                   <div class="pub-num-title">
                     <span class="pub-num">[2]</span>
                     <span class="pub-title"
-                      >Sumi: Open Uniform Diffusion Language Model from Scratch</span
+                      >Sumi: Open Uniform Diffusion Language Model from
+                      Scratch</span
                     >
                   </div>
                   <div class="pub-authors">
-                    Mengyu Ye, Keito Kudo, Wataru Ikeda,
-                    <strong>Ryosuke Matsuda</strong>, Keisuke Sakaguchi, Jun Suzuki
+                    <span class="en-only">
+                      Mengyu Ye, Keito Kudo, Wataru Ikeda,
+                      <strong>Ryosuke Matsuda</strong>, Keisuke Sakaguchi, Jun
+                      Suzuki
+                    </span>
+                    <span class="ja-only">
+                      葉 夢字, 工藤 慧音, 池田 航,
+                      <strong>松田 陵佑</strong>, 坂口 慶祐, 鈴木 潤
+                    </span>
                   </div>
                   <div class="pub-venue">
-                    <em>arXiv preprint arXiv:2606.19005</em>, June 2026.
+                    <span class="en-only">
+                      <em>arXiv preprint arXiv:2606.19005</em>, June 2026.
+                    </span>
+                    <span class="ja-only">
+                      <em>arXiv プレプリント arXiv:2606.19005</em>, 2026年6月.
+                    </span>
                   </div>
                   <div class="pub-actions">
                     <div class="pub-links">
@@ -1229,22 +1459,27 @@
                         href="https://arxiv.org/abs/2606.19005"
                         target="_blank"
                         rel="noopener"
-                        >Paper</a
                       >
+                        <span class="en-only">Paper</span>
+                        <span class="ja-only">論文</span>
+                      </a>
                       <a
                         class="pub-link"
                         href="https://www.nlp.ecei.tohoku.ac.jp/projects/sumi/#cite"
                         target="_blank"
                         rel="noopener"
-                        >Website</a
                       >
+                        <span class="en-only">Website</span>
+                        <span class="ja-only">ウェブサイト</span>
+                      </a>
                     </div>
                     <button
                       class="pub-abstract-btn"
                       aria-expanded="false"
                       aria-controls="abstract-2"
                     >
-                      Abstract
+                      <span class="en-only">Abstract</span>
+                      <span class="ja-only">概要</span>
                       <svg
                         class="chevron"
                         width="13"
@@ -1266,8 +1501,48 @@
               <div class="pub-abstract-wrap">
                 <div class="pub-abstract-inner">
                   <div class="pub-abstract" id="abstract-2">
-                    <div class="pub-abstract-label">Abstract</div>
-                    Diffusion models have become a promising alternative to autoregressive models. Among these, uniform diffusion language models (UDLMs) permit any token to be updated at any step, in principle enabling more flexible generation. However, no UDLM has yet been pretrained from scratch at both large parameter scale and large token budget. Both autoregressive modeling and masked diffusion modeling already have capable models at scale that the community can study and build on; uniform diffusion has none. A scratch-pretrained UDLM at scale would provide a clean reference point for studying scaling behavior, generation dynamics, controllability, and trade-offs against established autoregressive and masked diffusion models. To this end, we introduce Sumi ("ink" in Japanese), a fully open 7B uniform diffusion language model pretrained from scratch on 1.5T tokens. Sumi performs competitively with autoregressive models trained at comparable token budgets on knowledge, reasoning, and coding benchmarks, while under-performing on commonsense benchmarks, where our education-heavy data mixture is a likely contributor. We release our model weights, checkpoints, and full training recipe, including a complete specification of the data mixture over publicly available corpora. We hope this release enables the community to study native uniform diffusion at scale and catalyzes work on its as-yet poorly understood aspects.
+                    <div class="pub-abstract-label">
+                      <span class="en-only">Abstract</span>
+                      <span class="ja-only">概要</span>
+                    </div>
+                    <span class="en-only">
+                      Diffusion models have become a promising alternative to
+                      autoregressive models. Among these, uniform diffusion
+                      language models (UDLMs) permit any token to be updated at
+                      any step, in principle enabling more flexible generation.
+                      However, no UDLM has yet been pretrained from scratch at
+                      both large parameter scale and large token budget. Both
+                      autoregressive modeling and masked diffusion modeling
+                      already have capable models at scale that the community can
+                      study and build on; uniform diffusion has none. A
+                      scratch-pretrained UDLM at scale would provide a clean
+                      reference point for studying scaling behavior, generation
+                      dynamics, controllability, and trade-offs against
+                      established autoregressive and masked diffusion models. To
+                      this end, we introduce Sumi ("ink" in Japanese), a fully
+                      open 7B uniform diffusion language model pretrained from
+                      scratch on 1.5T tokens. Sumi performs competitively with
+                      autoregressive models trained at comparable token budgets on
+                      knowledge, reasoning, and coding benchmarks, while
+                      under-performing on commonsense benchmarks, where our
+                      education-heavy data mixture is a likely contributor. We
+                      release our model weights, checkpoints, and full training
+                      recipe, including a complete specification of the data
+                      mixture over publicly available corpora. We hope this
+                      release enables the community to study native uniform
+                      diffusion at scale and catalyzes work on its as-yet poorly
+                      understood aspects.
+                    </span>
+                    <span class="ja-only">
+                      拡散モデルは自己回帰モデルの有望な代替手段となりつつある．中でも一様拡散言語モデル（UDLM）は，任意のトークンを任意のステップで更新できるため，原理的にはより柔軟な生成が可能である．しかし，大規模なパラメータ数と大規模なトークン予算の双方を満たす形でスクラッチから事前学習された
+                      UDLM
+                      はこれまで存在しなかった．自己回帰モデリングとマスク拡散モデリングには，コミュニティが研究や開発の土台にできる大規模で高性能なモデルが既に存在する一方，一様拡散には存在しない．大規模にスクラッチ事前学習された
+                      UDLM
+                      は，スケーリング特性，生成ダイナミクス，制御性，および既存の自己回帰モデル・マスク拡散モデルとのトレードオフを研究するための明確な基準点を与える．そこで本研究では，1.5T
+                      トークンでスクラッチから事前学習した完全公開の 7B
+                      一様拡散言語モデル Sumi（日本語の「墨」に由来）を提案する．Sumi
+                      は，同程度のトークン予算で学習された自己回帰モデルと比較して，知識・推論・コーディングの各ベンチマークで遜色ない性能を示す一方，常識推論ベンチマークでは劣っており，教育系に偏った学習データ混合がその一因と考えられる．我々はモデルの重み，チェックポイント，および公開コーパス上のデータ混合の完全な仕様を含む学習レシピ全体を公開する．本公開により，大規模なネイティブ一様拡散モデルの研究が促進され，未解明な側面に関する研究が加速することを期待する．
+                    </span>
                   </div>
                 </div>
               </div>
@@ -1278,57 +1553,70 @@
 
       <!-- ── Domestic Conferences / Symposium ── -->
       <section>
-        <div class="section-title">Domestic Conferences / Symposium</div>
+        <div class="section-title">
+          <span class="en-only">Domestic Conferences / Symposium</span>
+          <span class="ja-only">国内会議・シンポジウム</span>
+        </div>
         <div class="card">
           <div class="pub-list">
-            <!-- [3] NLP 2026 -->
+            <!-- [3] YANS 2026 — Ryosuke Matsuda (first author) -->
             <div class="pub-item" id="pub-3">
               <div class="pub-top">
-                <div class="pub-thumb-wrap">
-                  <img
-                    class="pub-thumb"
-                    src="material/images/nlp2026_video_fig1.png"
-                    alt="NLP 2026 figure"
-                  />
-                </div>
                 <div class="pub-body">
                   <div class="pub-num-title">
                     <span class="pub-num">[3]</span>
-                    <span class="pub-title"
-                      >⻑尺動画⽣成タスクにおけるメタ評価ベンチマーク</span
-                    >
+                    <span class="pub-title">
+                      <span class="en-only"
+                        >Constructing a Japanese Document-Level Acceptability
+                        Judgment Dataset and a Fill-in-the-Middle Model for
+                        Machine Translation</span
+                      >
+                      <span class="ja-only"
+                        >機械翻訳タスクにおける日本語文書単位容認性判断データセット構築と途中補完モデル</span
+                      >
+                    </span>
                   </div>
                   <div class="pub-authors">
-                    <strong>松⽥ 陵佑</strong>, ⼯藤 慧⾳, 吉⽥ 遥⾳, 清⽔ 伸幸,
-                    鈴⽊ 潤
+                    <span class="en-only">
+                      <strong>Ryosuke Matsuda</strong>, Keito Kudo, Ryo Fujii,
+                      Makoto Morishita, Takumi Ito, Jun Suzuki
+                    </span>
+                    <span class="ja-only">
+                      <strong>松田 陵佑</strong>, 工藤 慧音, 藤井 諒, 森下 睦,
+                      伊藤 拓海, 鈴木 潤
+                    </span>
                   </div>
                   <div class="pub-venue">
-                    <em>言語処理学会第32回年次大会（NLP 2026）</em>, 宇都宮,
-                    栃木, pp.596-601, March 2026.
+                    <span class="en-only">
+                      <em
+                        >The 21st Annual Meeting of the Young Researcher
+                        Association for NLP Studies (YANS 2026)</em
+                      >, Sendai, Miyagi, August 2026.
+                    </span>
+                    <span class="ja-only">
+                      <em>NLP若手の会 第21回シンポジウム（YANS 2026）</em>, 仙台,
+                      宮城, 2026年8月.
+                    </span>
                   </div>
                   <div class="pub-actions">
                     <div class="pub-links">
                       <a
                         class="pub-link"
-                        href="https://www.anlp.jp/proceedings/annual_meeting/2026/pdf_dir/C2-1.pdf"
+                        href="material/pdf/YANS2026_RyosukeMatsuda.pdf"
                         target="_blank"
                         rel="noopener"
-                        >Paper</a
                       >
-                      <a
-                        class="pub-link"
-                        href="material/pdf/NLP2026_video_Poster.pdf"
-                        target="_blank"
-                        rel="noopener"
-                        >Poster</a
-                      >
+                        <span class="en-only">Poster</span>
+                        <span class="ja-only">ポスター</span>
+                      </a>
                     </div>
                     <button
                       class="pub-abstract-btn"
                       aria-expanded="false"
                       aria-controls="abstract-3"
                     >
-                      Abstract
+                      <span class="en-only">Abstract</span>
+                      <span class="ja-only">概要</span>
                       <svg
                         class="chevron"
                         width="13"
@@ -1350,72 +1638,97 @@
               <div class="pub-abstract-wrap">
                 <div class="pub-abstract-inner">
                   <div class="pub-abstract" id="abstract-3">
-                    <div class="pub-abstract-label">Abstract</div>
-                    動画生成モデルの評価システム自体の性能をメタ評価するためのベンチマーク
-                    SLVMEval を提案する．SLVMEval
-                    は合成的に構築された，高品質動画と低品質動画のペアからなる．これらの動画は平均約
-                    19 分，最大約 3
-                    時間の長尺動画となっている．評価システムは，与えられた動画ペアのどちらが高品質であるかを識別できる割合（正解率）によって評価される．実験の結果，既存の自動評価システムは
-                    10 観点中 9
-                    観点で人間の正解率に及ばず，特にプロンプトと動画の一貫性に関する観点で性能が著しく低いことを明らかにした．
+                    <div class="pub-abstract-label">
+                      <span class="en-only">Abstract</span>
+                      <span class="ja-only">概要</span>
+                    </div>
+                    <span class="en-only">
+                      This talk gives an overview of the system submitted by team
+                      RFMT to WMT2026, a shared task competing on the performance
+                      of machine translation systems. Our system aims to translate
+                      a given document into Japanese. To build it, we manually
+                      constructed CAJALA, a Japanese document-level acceptability
+                      judgment dataset. CAJALA provides multiple paraphrases for
+                      selected segments in a document and annotates, by hand,
+                      which candidate is relatively more acceptable. We converted
+                      this dataset into parallel document pairs via
+                      back-translation and then applied direct preference
+                      optimization, aiming to improve the naturalness of the
+                      generated translations. In addition, we jointly performed
+                      fill-in-the-middle translation training in order to restore
+                      missing segments in a document, attempting to improve
+                      quality through post-hoc correction of translation errors.
+                    </span>
+                    <span class="ja-only">
+                      本発表では，機械翻訳システムの性能を競うコンペである WMT2026
+                      に提出したチーム RFMT
+                      のシステムについて概観する．本システムは与えられた文章を日本語に翻訳することを目的としたシステムである．システムの構築にあたり，日本語文書単位容認性判断データセット（CAJALA）を人手で構築した．CAJALA
+                      は，文書中の一部のセグメントに対して複数の言い換えを用意し，その中からどの候補が相対的に容認可能かを人手でアノテーションしたデータセットである．本データセットを逆翻訳によって対訳文書対に変換した後に直接選好最適化学習を実施することで，生成される翻訳文の自然さの向上を狙った．加えて，文書中の欠落したセグメントを復元するため途中補完翻訳学習も同時に実施し，事後的な翻訳誤りの修正を行うことによる品質向上を試みた．
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
 
-            <!-- [4] NLP 2025 -->
+            <!-- [4] YANS 2026 — LLM-as-a-Judge -->
             <div class="pub-item" id="pub-4">
               <div class="pub-top">
-                <div class="pub-thumb-wrap">
-                  <img
-                    class="pub-thumb"
-                    src="material/images/nlp2025_shitsukan_fig1.png"
-                    alt="NLP 2025 figure"
-                  />
-                </div>
                 <div class="pub-body">
                   <div class="pub-num-title">
                     <span class="pub-num">[4]</span>
-                    <span
-                      class="pub-title"
-                      data-en="Analysis of Material Perception Capabilities in Large-Scale Visual Language Models"
-                      data-ja="大規模視覚言語モデルの質感知覚能力の分析"
-                    >
-                      大規模視覚言語モデルの質感知覚能力の分析
+                    <span class="pub-title">
+                      <span class="en-only"
+                        >Comparative Analysis of Likert-Scale and Ranking-Based
+                        Evaluation in LLM-as-a-Judge</span
+                      >
+                      <span class="ja-only"
+                        >LLM-as-a-Judgeにおけるリッカート評価とランキング評価の比較分析</span
+                      >
                     </span>
                   </div>
                   <div class="pub-authors">
-                    <strong data-en="Ryosuke Matsuda" data-ja="松田陵佑"
-                      >松田陵佑</strong
-                    >, 塩野大輝, Ana Brasard, 鈴木潤
+                    <span class="en-only">
+                      Shota Matsuda, Keigo Shibata, Sumika Tsuda, Toya Arikawa,
+                      Yong Sing Kwek, Wataru Ikeda, Yuka Saito, Akito Taneguchi,
+                      <strong>Ryosuke Matsuda</strong>, Reina Akama, Jun Suzuki
+                    </span>
+                    <span class="ja-only">
+                      松田 翔汰, 柴田 圭悟, 津田 純花, 有川 透矢, クェク ヨン シン,
+                      池田 航, 齋藤 由佳, 種口 暁人,
+                      <strong>松田 陵佑</strong>, 赤間 怜奈, 鈴木 潤
+                    </span>
                   </div>
                   <div class="pub-venue">
-                    <em>言語処理学会第31回年次大会（NLP 2025）</em>, 長崎,
-                    pp.2550–2555, March 2025.
+                    <span class="en-only">
+                      <em
+                        >The 21st Annual Meeting of the Young Researcher
+                        Association for NLP Studies (YANS 2026)</em
+                      >, Sendai, Miyagi, August 2026.
+                    </span>
+                    <span class="ja-only">
+                      <em>NLP若手の会 第21回シンポジウム（YANS 2026）</em>, 仙台,
+                      宮城, 2026年8月.
+                    </span>
                   </div>
                   <div class="pub-actions">
                     <div class="pub-links">
                       <a
                         class="pub-link"
-                        href="https://www.anlp.jp/proceedings/annual_meeting/2025/pdf_dir/Q6-14.pdf"
+                        href="material/pdf/YANS2026_ShotaMatsuda.pdf"
                         target="_blank"
                         rel="noopener"
-                        >Paper</a
                       >
-                      <a
-                        class="pub-link"
-                        href="material/pdf/NLP2025_shitsukan_Poster.pdf"
-                        target="_blank"
-                        rel="noopener"
-                        >Poster</a
-                      >
+                        <span class="en-only">Poster</span>
+                        <span class="ja-only">ポスター</span>
+                      </a>
                     </div>
                     <button
                       class="pub-abstract-btn"
                       aria-expanded="false"
                       aria-controls="abstract-4"
                     >
-                      Abstract
+                      <span class="en-only">Abstract</span>
+                      <span class="ja-only">概要</span>
                       <svg
                         class="chevron"
                         width="13"
@@ -1437,16 +1750,491 @@
               <div class="pub-abstract-wrap">
                 <div class="pub-abstract-inner">
                   <div class="pub-abstract" id="abstract-4">
-                    <div class="pub-abstract-label">Abstract</div>
-                    本研究では，「質感」に焦点を当て，大規模視覚言語モデル（LVLM）の質感知覚能力を調査し，さらに
-                    LVLM
-                    と人間との間の質感知覚の整合性を分析することを目的とする．はじめに画像内の物体に対して人間が知覚する質感語を人手で収集した．次に，収集した質感語をもとに，LVLM
-                    が適切な質感語を選択できるか評価する分類タスクを設計し，LVLM
-                    と人間の正解率を算出した．また，LVLM
-                    に質感語を生成させ，その出力を人間が評価する生成タスクも実施した．最終的には，分類タスクの正解率が高い
-                    LVLM
-                    は，生成タスクにおいても高いスコアを示すことを確認し，分類タスクが，LVLM
-                    の質感知覚能力の評価だけでなく，人間知覚の整合性まで簡易に評価できる可能性があることを示す．
+                    <div class="pub-abstract-label">
+                      <span class="en-only">Abstract</span>
+                      <span class="ja-only">概要</span>
+                    </div>
+                    <span class="en-only">
+                      Likert-scale rating is one of the representative evaluation
+                      formats used in evaluation benchmarks. However, because
+                      Likert-scale rating is a graded assessment based on a
+                      predefined scale, it has the drawback that it cannot capture
+                      qualitative differences between outputs that are assigned
+                      the same score. In contrast, ranking-based evaluation, which
+                      compares outputs relatively and orders them, assigns a
+                      unique order to all outputs and may therefore capture
+                      differences that Likert-scale rating cannot distinguish. In
+                      this study, we compare Likert-scale and ranking-based
+                      evaluation by LLM-as-a-Judge, and analyze what
+                      correspondences and discrepancies arise between the two sets
+                      of evaluation results.
+                    </span>
+                    <span class="ja-only">
+                      評価ベンチマークにおいて，リッカート評価は代表的な評価形式の1つである．しかし，リッカート評価は事前に定義された尺度に基づく段階評価であるため，同一の評価値と判定された出力間の質的な差異を捉えられないという課題がある．一方，相対的に評価して順位づけを行うランキング評価では，全ての出力に一意の順序が与えられるため，リッカート評価では区別できない差異も捉えられる可能性がある．本研究では，LLM-as-a-Judgeによるリッカート評価とランキング評価を比較し，両者の評価結果にどのような対応関係や差異が生じるかを分析する．
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- [5] YANS 2026 — Chat template -->
+            <div class="pub-item" id="pub-5">
+              <div class="pub-top">
+                <div class="pub-body">
+                  <div class="pub-num-title">
+                    <span class="pub-num">[5]</span>
+                    <span class="pub-title">
+                      <span class="en-only"
+                        >Statistical Analysis of the Impact of Chat Template
+                        Differences on the Performance Evaluation of LLMs</span
+                      >
+                      <span class="ja-only"
+                        >チャットテンプレートの差異がLLMの性能評価に与える影響の統計的分析</span
+                      >
+                    </span>
+                  </div>
+                  <div class="pub-authors">
+                    <span class="en-only">
+                      Yong Sing Kwek, Akito Taneguchi,
+                      <strong>Ryosuke Matsuda</strong>, Wataru Ikeda, Keigo
+                      Shibata, Sumika Tsuda, Yuka Saito, Shota Matsuda, Toya
+                      Arikawa, Reina Akama, Jun Suzuki
+                    </span>
+                    <span class="ja-only">
+                      クェク ヨン シン, 種口 暁人,
+                      <strong>松田 陵佑</strong>, 池田 航, 柴田 圭悟, 津田 純花,
+                      齋藤 由佳, 松田 翔汰, 有川 透矢, 赤間 怜奈, 鈴木 潤
+                    </span>
+                  </div>
+                  <div class="pub-venue">
+                    <span class="en-only">
+                      <em
+                        >The 21st Annual Meeting of the Young Researcher
+                        Association for NLP Studies (YANS 2026)</em
+                      >, Sendai, Miyagi, August 2026.
+                    </span>
+                    <span class="ja-only">
+                      <em>NLP若手の会 第21回シンポジウム（YANS 2026）</em>, 仙台,
+                      宮城, 2026年8月.
+                    </span>
+                  </div>
+                  <div class="pub-actions">
+                    <div class="pub-links"></div>
+                    <button
+                      class="pub-abstract-btn"
+                      aria-expanded="false"
+                      aria-controls="abstract-5"
+                    >
+                      <span class="en-only">Abstract</span>
+                      <span class="ja-only">概要</span>
+                      <svg
+                        class="chevron"
+                        width="13"
+                        height="13"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="m6 9 6 6 6-6" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="pub-abstract-wrap">
+                <div class="pub-abstract-inner">
+                  <div class="pub-abstract" id="abstract-5">
+                    <div class="pub-abstract-label">
+                      <span class="en-only">Abstract</span>
+                      <span class="ja-only">概要</span>
+                    </div>
+                    <span class="en-only">
+                      In evaluating the performance of large language models,
+                      various chat templates are used to convert input prompts
+                      into a format that the model can process. If the format of
+                      the chat template is not appropriate, the model may not
+                      produce the responses originally expected of it, and its
+                      performance may not be measured properly. However, the
+                      extent to which such implementation-level differences in
+                      chat templates affect evaluation results has not been
+                      sufficiently clarified. In this study, we apply multiple
+                      chat template conditions to the same model and evaluation
+                      data, and compare the resulting evaluation results. By
+                      statistically analyzing the observed performance gaps and
+                      changes in predictions, we examine the impact that
+                      differences in chat templates have on the performance
+                      evaluation of large language models.
+                    </span>
+                    <span class="ja-only">
+                      大規模言語モデルの性能評価では，入力プロンプトをモデルが処理可能な形式に変換するために，様々なチャットテンプレートが用いられている．チャットテンプレートの形式が適切でない場合，モデルに本来期待している応答が得られずに，モデル性能を適切に測定できない可能性がある．しかし，このようなチャットテンプレートの実装上の差異が評価結果にどの程度影響するかは，十分に明らかになっていない．本研究では，同一のモデルおよび評価データに対して複数のチャットテンプレート条件を適用し，その評価結果を比較する．得られた性能差や予測結果の変化を統計的に分析することで，チャットテンプレートの差異が大規模言語モデルの性能評価に与える影響について検討する．
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- [6] YANS 2026 — Power analysis across eras -->
+            <div class="pub-item" id="pub-6">
+              <div class="pub-top">
+                <div class="pub-body">
+                  <div class="pub-num-title">
+                    <span class="pub-num">[6]</span>
+                    <span class="pub-title">
+                      <span class="en-only"
+                        >Power Analysis of Performance Differences among Large
+                        Language Models on Evaluation Data from Different
+                        Eras</span
+                      >
+                      <span class="ja-only"
+                        >年代別評価データにおける大規模言語モデルの性能差の検出力分析</span
+                      >
+                    </span>
+                  </div>
+                  <div class="pub-authors">
+                    <span class="en-only">
+                      Toya Arikawa, Wataru Ikeda, Yuka Saito, Shota Matsuda, Yong
+                      Sing Kwek, Keigo Shibata, Akito Taneguchi, Sumika Tsuda,
+                      <strong>Ryosuke Matsuda</strong>, Reina Akama, Jun Suzuki
+                    </span>
+                    <span class="ja-only">
+                      有川 透矢, 池田 航, 齋藤 由佳, 松田 翔汰, クェク ヨン シン,
+                      柴田 圭悟, 種口 暁人, 津田 純花,
+                      <strong>松田 陵佑</strong>, 赤間 怜奈, 鈴木 潤
+                    </span>
+                  </div>
+                  <div class="pub-venue">
+                    <span class="en-only">
+                      <em
+                        >The 21st Annual Meeting of the Young Researcher
+                        Association for NLP Studies (YANS 2026)</em
+                      >, Sendai, Miyagi, August 2026.
+                    </span>
+                    <span class="ja-only">
+                      <em>NLP若手の会 第21回シンポジウム（YANS 2026）</em>, 仙台,
+                      宮城, 2026年8月.
+                    </span>
+                  </div>
+                  <div class="pub-actions">
+                    <div class="pub-links"></div>
+                    <button
+                      class="pub-abstract-btn"
+                      aria-expanded="false"
+                      aria-controls="abstract-6"
+                    >
+                      <span class="en-only">Abstract</span>
+                      <span class="ja-only">概要</span>
+                      <svg
+                        class="chevron"
+                        width="13"
+                        height="13"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="m6 9 6 6 6-6" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="pub-abstract-wrap">
+                <div class="pub-abstract-inner">
+                  <div class="pub-abstract" id="abstract-6">
+                    <div class="pub-abstract-label">
+                      <span class="en-only">Abstract</span>
+                      <span class="ja-only">概要</span>
+                    </div>
+                    <span class="en-only">
+                      As the performance of large language models improves,
+                      evaluation data has been created with the aim of making
+                      tasks harder and more fine-grained. A likely reason behind
+                      this is that conventional evaluation data can no longer
+                      sufficiently capture differences among high-performing
+                      models. Therefore, when considering the future direction of
+                      evaluation data, it is important to clarify to what extent
+                      existing evaluation data can capture performance differences
+                      among models, and analyses targeting individual evaluation
+                      datasets have been carried out so far. On the other hand,
+                      there have been few attempts to compare evaluation data
+                      created in different eras across the board and to analyze
+                      how their ability to capture performance differences among
+                      models has changed over time. In this study, we therefore
+                      evaluate model performance using evaluation data from
+                      different eras and analyze to what extent each dataset can
+                      discriminate performance differences among models.
+                      Specifically, we apply multiple models to each evaluation
+                      dataset and compare how the trends in model scores and in
+                      score differences between models vary by era.
+                    </span>
+                    <span class="ja-only">
+                      大規模言語モデルの性能向上に伴い，タスクの高難度化や細分化を目的とした評価データが作成されている．その背景として，従来の評価データでは高性能なモデル間の差を十分に捉えられなくなっていることが考えられる．そのため，今後の評価データの方向性を検討する上では，既存の評価データがモデル間の性能差をどの程度捉えられるのかを明らかにすることが重要であり，これまでに個々の評価データを対象とした分析が行われてきた．一方で，作成年代の異なる評価データを横断的に比較し，モデル間の性能差を捉える能力が時間と共にどのように変化してきたかを分析する試みは十分になされていない．そこで本研究では，年代の異なる評価データを用いてモデルの性能評価を行い，評価データごとにモデル間の性能差をどの程度識別できるのかを分析する．具体的には，複数のモデルを各評価データに適用し，モデルのスコアおよびモデル間のスコア差の傾向が年代によってどのように異なるのかを比較する．
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- [7] NLP 2026 -->
+            <div class="pub-item" id="pub-7">
+              <div class="pub-top">
+                <div class="pub-thumb-wrap">
+                  <img
+                    class="pub-thumb"
+                    src="material/images/nlp2026_video_fig1.png"
+                    alt="NLP 2026 figure"
+                  />
+                </div>
+                <div class="pub-body">
+                  <div class="pub-num-title">
+                    <span class="pub-num">[7]</span>
+                    <span class="pub-title">
+                      <span class="en-only"
+                        >A Meta-Evaluation Benchmark for Long Video Generation
+                        Tasks</span
+                      >
+                      <span class="ja-only"
+                        >長尺動画生成タスクにおけるメタ評価ベンチマーク</span
+                      >
+                    </span>
+                  </div>
+                  <div class="pub-authors">
+                    <span class="en-only">
+                      <strong>Ryosuke Matsuda</strong>, Keito Kudo, Haruto
+                      Yoshida, Nobuyuki Shimizu, Jun Suzuki
+                    </span>
+                    <span class="ja-only">
+                      <strong>松田 陵佑</strong>, 工藤 慧音, 吉田 遥音, 清水 伸幸,
+                      鈴木 潤
+                    </span>
+                  </div>
+                  <div class="pub-venue">
+                    <span class="en-only">
+                      <em
+                        >The 32nd Annual Meeting of the Association for Natural
+                        Language Processing (NLP 2026)</em
+                      >, Utsunomiya, Tochigi, pp.596-601, March 2026.
+                    </span>
+                    <span class="ja-only">
+                      <em>言語処理学会第32回年次大会（NLP 2026）</em>, 宇都宮, 栃木,
+                      pp.596-601, 2026年3月.
+                    </span>
+                  </div>
+                  <div class="pub-actions">
+                    <div class="pub-links">
+                      <a
+                        class="pub-link"
+                        href="https://www.anlp.jp/proceedings/annual_meeting/2026/pdf_dir/C2-1.pdf"
+                        target="_blank"
+                        rel="noopener"
+                      >
+                        <span class="en-only">Paper</span>
+                        <span class="ja-only">論文</span>
+                      </a>
+                      <a
+                        class="pub-link"
+                        href="material/pdf/NLP2026_video_Poster.pdf"
+                        target="_blank"
+                        rel="noopener"
+                      >
+                        <span class="en-only">Poster</span>
+                        <span class="ja-only">ポスター</span>
+                      </a>
+                    </div>
+                    <button
+                      class="pub-abstract-btn"
+                      aria-expanded="false"
+                      aria-controls="abstract-7"
+                    >
+                      <span class="en-only">Abstract</span>
+                      <span class="ja-only">概要</span>
+                      <svg
+                        class="chevron"
+                        width="13"
+                        height="13"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="m6 9 6 6 6-6" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="pub-abstract-wrap">
+                <div class="pub-abstract-inner">
+                  <div class="pub-abstract" id="abstract-7">
+                    <div class="pub-abstract-label">
+                      <span class="en-only">Abstract</span>
+                      <span class="ja-only">概要</span>
+                    </div>
+                    <span class="en-only">
+                      We propose SLVMEval, a benchmark for meta-evaluating the
+                      performance of video generation evaluation systems
+                      themselves. SLVMEval consists of synthetically constructed
+                      pairs of high-quality and low-quality videos. These videos
+                      are long, averaging about 19 minutes and reaching up to
+                      about 3 hours. Evaluation systems are scored by the rate
+                      (accuracy) at which they can identify which of a given video
+                      pair is of higher quality. Our experiments reveal that
+                      existing automatic evaluation systems fall short of human
+                      accuracy on 9 of 10 aspects, and that their performance is
+                      particularly poor on aspects related to the consistency
+                      between the prompt and the video.
+                    </span>
+                    <span class="ja-only">
+                      動画生成モデルの評価システム自体の性能をメタ評価するためのベンチマーク
+                      SLVMEval を提案する．SLVMEval
+                      は合成的に構築された，高品質動画と低品質動画のペアからなる．これらの動画は平均約
+                      19 分，最大約 3
+                      時間の長尺動画となっている．評価システムは，与えられた動画ペアのどちらが高品質であるかを識別できる割合（正解率）によって評価される．実験の結果，既存の自動評価システムは
+                      10 観点中 9
+                      観点で人間の正解率に及ばず，特にプロンプトと動画の一貫性に関する観点で性能が著しく低いことを明らかにした．
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- [8] NLP 2025 -->
+            <div class="pub-item" id="pub-8">
+              <div class="pub-top">
+                <div class="pub-thumb-wrap">
+                  <img
+                    class="pub-thumb"
+                    src="material/images/nlp2025_shitsukan_fig1.png"
+                    alt="NLP 2025 figure"
+                  />
+                </div>
+                <div class="pub-body">
+                  <div class="pub-num-title">
+                    <span class="pub-num">[8]</span>
+                    <span class="pub-title">
+                      <span class="en-only"
+                        >Analysis of Material Perception Capabilities in
+                        Large-Scale Visual Language Models</span
+                      >
+                      <span class="ja-only"
+                        >大規模視覚言語モデルの質感知覚能力の分析</span
+                      >
+                    </span>
+                  </div>
+                  <div class="pub-authors">
+                    <span class="en-only">
+                      <strong>Ryosuke Matsuda</strong>, Daiki Shiono, Ana
+                      Brassard, Jun Suzuki
+                    </span>
+                    <span class="ja-only">
+                      <strong>松田 陵佑</strong>, 塩野 大輝, Ana Brassard, 鈴木 潤
+                    </span>
+                  </div>
+                  <div class="pub-venue">
+                    <span class="en-only">
+                      <em
+                        >The 31st Annual Meeting of the Association for Natural
+                        Language Processing (NLP 2025)</em
+                      >, Nagasaki, pp.2550–2555, March 2025.
+                    </span>
+                    <span class="ja-only">
+                      <em>言語処理学会第31回年次大会（NLP 2025）</em>, 長崎,
+                      pp.2550–2555, 2025年3月.
+                    </span>
+                  </div>
+                  <div class="pub-actions">
+                    <div class="pub-links">
+                      <a
+                        class="pub-link"
+                        href="https://www.anlp.jp/proceedings/annual_meeting/2025/pdf_dir/Q6-14.pdf"
+                        target="_blank"
+                        rel="noopener"
+                      >
+                        <span class="en-only">Paper</span>
+                        <span class="ja-only">論文</span>
+                      </a>
+                      <a
+                        class="pub-link"
+                        href="material/pdf/NLP2025_shitsukan_Poster.pdf"
+                        target="_blank"
+                        rel="noopener"
+                      >
+                        <span class="en-only">Poster</span>
+                        <span class="ja-only">ポスター</span>
+                      </a>
+                    </div>
+                    <button
+                      class="pub-abstract-btn"
+                      aria-expanded="false"
+                      aria-controls="abstract-8"
+                    >
+                      <span class="en-only">Abstract</span>
+                      <span class="ja-only">概要</span>
+                      <svg
+                        class="chevron"
+                        width="13"
+                        height="13"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="m6 9 6 6 6-6" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="pub-abstract-wrap">
+                <div class="pub-abstract-inner">
+                  <div class="pub-abstract" id="abstract-8">
+                    <div class="pub-abstract-label">
+                      <span class="en-only">Abstract</span>
+                      <span class="ja-only">概要</span>
+                    </div>
+                    <span class="en-only">
+                      In this study, we focus on "Shitsukan" (material perception)
+                      and investigate the material perception capabilities of
+                      large visual language models (LVLMs), further aiming to
+                      analyze the alignment of material perception between LVLMs
+                      and humans. We first manually collected material-related
+                      words that humans perceive for objects in images. Next,
+                      based on the collected words, we designed a classification
+                      task that evaluates whether LVLMs can select appropriate
+                      material words, and computed the accuracy of both LVLMs and
+                      humans. We also conducted a generation task in which LVLMs
+                      generate material words and humans evaluate their outputs.
+                      Finally, we confirmed that LVLMs with high accuracy on the
+                      classification task also score highly on the generation
+                      task, showing that the classification task may serve as a
+                      simple way to evaluate not only the material perception
+                      capability of LVLMs but also their alignment with human
+                      perception.
+                    </span>
+                    <span class="ja-only">
+                      本研究では，「質感」に焦点を当て，大規模視覚言語モデル（LVLM）の質感知覚能力を調査し，さらに
+                      LVLM
+                      と人間との間の質感知覚の整合性を分析することを目的とする．はじめに画像内の物体に対して人間が知覚する質感語を人手で収集した．次に，収集した質感語をもとに，LVLM
+                      が適切な質感語を選択できるか評価する分類タスクを設計し，LVLM
+                      と人間の正解率を算出した．また，LVLM
+                      に質感語を生成させ，その出力を人間が評価する生成タスクも実施した．最終的には，分類タスクの正解率が高い
+                      LVLM
+                      は，生成タスクにおいても高いスコアを示すことを確認し，分類タスクが，LVLM
+                      の質感知覚能力の評価だけでなく，人間知覚の整合性まで簡易に評価できる可能性があることを示す．
+                    </span>
                   </div>
                 </div>
               </div>
@@ -1457,71 +2245,143 @@
 
       <!-- ── Activity ── -->
       <section>
-        <div class="section-title">Activity</div>
+        <div class="section-title">
+          <span class="en-only">Activity</span>
+          <span class="ja-only">活動</span>
+        </div>
         <div class="card">
           <div class="exp-list">
             <div class="exp-item">
-              <div class="exp-title">Teaching Assistant (TA)</div>
+              <div class="exp-title">
+                <span class="en-only">Teaching Assistant (TA)</span>
+                <span class="ja-only">ティーチング・アシスタント（TA）</span>
+              </div>
               <div class="exp-description">
                 <ul>
                   <li>
-                    <strong
-                      >Technical Support · Tohoku University · 2025.04 -
-                      2027.03</strong
+                    <strong>
+                      <span class="en-only"
+                        >Technical Support · Tohoku University · 2025.04 -
+                        2027.03</span
+                      >
+                      <span class="ja-only"
+                        >教育系情報基盤の利用相談 · 東北大学 · 2025.04 -
+                        2027.03</span
+                      > </strong
                     ><br />
-                    Provide learning support and ICT consultations at Kawanai
-                    North Campus.
+                    <span class="en-only"
+                      >Provide learning support and ICT consultations at Kawauchi
+                      North Campus.</span
+                    >
+                    <span class="ja-only"
+                      >川内北キャンパスにて学習支援および ICT
+                      に関する相談対応を行う．</span
+                    >
                   </li>
                   <li>
-                    <strong
-                      >TIS Lecture · Tohoku University · 2025.10 -
-                      2026.03</strong
+                    <strong>
+                      <span class="en-only"
+                        >TIS Lecture · Tohoku University · 2025.10 -
+                        2026.03</span
+                      >
+                      <span class="ja-only"
+                        >TIS寄附講義 · 東北大学 · 2025.10 - 2026.03</span
+                      > </strong
                     ><br />
-                    TIS Lecture: Practical Lecture of System Integration for AI
-                    Era 2025
+                    <span class="en-only"
+                      >TIS Lecture: Practical Lecture of System Integration for
+                      AI Era 2025</span
+                    >
+                    <span class="ja-only"
+                      >TIS寄附講義：AI活用時代のシステムインテグレーション技術</span
+                    >
                   </li>
                   <li>
-                    <strong
-                      >Generative AI App Development · Tohoku University ·
-                      2025.04 - 2025.08</strong
+                    <strong>
+                      <span class="en-only"
+                        >Practical Python Programming · Tohoku University ·
+                        2025.04 - 2025.08</span
+                      >
+                      <span class="ja-only"
+                        >Pythonプログラミング実習 · 東北大学 · 2025.04 -
+                        2025.08</span
+                      > </strong
                     ><br />
-                    Teaching Assistant for the course on developing practical
-                    applications using generative AI.
+                    <span class="en-only"
+                      >Practical Python Programming and Application Development
+                      Using AI</span
+                    >
+                    <span class="ja-only"
+                      >AIを活用したPythonプログラミングの実習と実用アプリ開発</span
+                    >
                   </li>
                 </ul>
               </div>
             </div>
             <div class="exp-item">
-              <div class="exp-title">Research Assistant (RA)</div>
+              <div class="exp-title">
+                <span class="en-only">Research Assistant (RA)</span>
+                <span class="ja-only">リサーチ・アシスタント（RA）</span>
+              </div>
               <div class="exp-description">
                 <ul>
                   <li>
-                    <strong
-                      >LINE Yahoo Corporation · Part-time · 2025.03 -
-                      Present</strong
+                    <strong>
+                      <span class="en-only"
+                        >LINE Yahoo Corporation · Part-time · 2025.03 -
+                        Present</span
+                      >
+                      <span class="ja-only"
+                        >LINEヤフー株式会社 · アルバイト · 2025.03 - 現在</span
+                      > </strong
                     ><br />
-                    Research collaboration with LINE Yahoo as RA.
+                    <span class="en-only"
+                      >Research collaboration with LINE Yahoo as RA.</span
+                    >
+                    <span class="ja-only"
+                      >RA として LINEヤフーとの共同研究に従事．</span
+                    >
                   </li>
                 </ul>
               </div>
             </div>
             <div class="exp-item">
-              <div class="exp-title">Research Fellowship / Scholarship</div>
+              <div class="exp-title">
+                <span class="en-only">Research Fellowship / Scholarship</span>
+                <span class="ja-only">研究フェローシップ・奨学金</span>
+              </div>
               <div class="exp-description">
                 <ul>
                   <li>
-                    <strong
-                      ><a
+                    <strong>
+                      <a
                         href="https://gp-ds.tohoku.ac.jp/en/overview/illustration.html"
                         target="_blank"
                         rel="noopener"
-                        >Graduate Program in Data Science</a
-                      > · 2026-4 - Present
-                      <span class="early-note">(Approx. 20%)</span></strong
+                      >
+                        <span class="en-only"
+                          >Graduate Program in Data Science</span
+                        >
+                        <span class="ja-only"
+                          >東北大学データ科学国際共同大学院（GP-DS）</span
+                        >
+                      </a>
+                      · 2026-4 -
+                      <span class="en-only">Present</span>
+                      <span class="ja-only">現在</span>
+                      <span class="early-note">
+                        <span class="en-only">(Approx. 20%)</span>
+                        <span class="ja-only">（約 20%）</span> </span
+                      > </strong
                     ><br />
-                    An interdisciplinary integrated data science education program
-                    that develops human resources with information utilization
-                    capabilities.
+                    <span class="en-only"
+                      >An interdisciplinary integrated data science education
+                      program that develops human resources with information
+                      utilization capabilities.</span
+                    >
+                    <span class="ja-only"
+                      >情報活用能力を備えた人材を育成する，分野横断・文理融合型のデータ科学教育プログラム．</span
+                    >
                   </li>
                 </ul>
               </div>
@@ -1532,7 +2392,10 @@
 
       <!-- ── Awards ── -->
       <section>
-        <div class="section-title">Awards</div>
+        <div class="section-title">
+          <span class="en-only">Awards</span>
+          <span class="ja-only">受賞</span>
+        </div>
         <div class="card">
           <div class="exp-list">
             <div class="exp-item">
@@ -1546,7 +2409,8 @@
                 </div>
                 <div>
                   <div class="exp-title">
-                    <span>JPHACKS 2024 Awards</span>
+                    <span class="en-only">JPHACKS 2024 Awards</span>
+                    <span class="ja-only">JPHACKS 2024 受賞</span>
                   </div>
                   <div class="exp-sub">
                     <a
@@ -1563,16 +2427,28 @@
                           href="https://jphacks.com/2024/result/"
                           target="_blank"
                           rel="noopener"
-                          >イノベーター認定 (7/98 = 7.1%)</a
                         >
+                          <span class="en-only"
+                            >Innovator Certification (7/98 = 7.1%)</span
+                          >
+                          <span class="ja-only"
+                            >イノベーター認定 (7/98 = 7.1%)</span
+                          >
+                        </a>
                       </li>
                       <li>
                         <a
                           href="https://jphacks.com/2024/result/"
                           target="_blank"
                           rel="noopener"
-                          >スポンサー賞 (ウルシステムズ株式会社賞)</a
                         >
+                          <span class="en-only"
+                            >Sponsor Award (UL Systems, Inc. Award)</span
+                          >
+                          <span class="ja-only"
+                            >スポンサー賞 (ウルシステムズ株式会社賞)</span
+                          >
+                        </a>
                       </li>
                     </ul>
                   </div>
@@ -1582,17 +2458,26 @@
             <div class="exp-item">
               <div class="pub-top">
                 <div class="pub-thumb-wrap">
-                  <img class="pub-thumb" src="material/images/bachelor.jpg" alt="Early Graduation" />
+                  <img
+                    class="pub-thumb"
+                    src="material/images/bachelor.jpg"
+                    alt="Early Graduation"
+                  />
                 </div>
                 <div>
                   <div class="exp-title">
-                    <span
-                      >Tohoku University Early Graduation
-                      </span
+                    <span class="en-only"
+                      >Tohoku University Early Graduation</span
                     >
+                    <span class="ja-only">東北大学 早期卒業</span>
                   </div>
                   <div class="exp-sub">
-                    Graduated Tohoku University (Bachelor) in 3 years!
+                    <span class="en-only"
+                      >Graduated Tohoku University (Bachelor) in 3 years!</span
+                    >
+                    <span class="ja-only"
+                      >3年間で東北大学（学士）を卒業！</span
+                    >
                     <span class="early-note">(5/2402 ≒ 0.21 %)</span>
                   </div>
                 </div>
@@ -1604,7 +2489,10 @@
 
       <!-- ── Skills ── -->
       <section>
-        <div class="section-title">Skills</div>
+        <div class="section-title">
+          <span class="en-only">Skills</span>
+          <span class="ja-only">スキル</span>
+        </div>
         <div class="card">
           <div class="tag-list">
             <span class="tag">Python</span>
@@ -1612,7 +2500,10 @@
             <span class="tag">SwiftUI</span>
             <span class="tag">AWS</span>
             <span class="tag">Docker/Singularity</span>
-            <span class="tag">Coding Agent</span>
+            <span class="tag">
+              <span class="en-only">Coding Agent</span>
+              <span class="ja-only">コーディングエージェント</span>
+            </span>
           </div>
         </div>
       </section>
@@ -1623,12 +2514,12 @@
       id="lightbox"
       role="dialog"
       aria-modal="true"
-      aria-label="拡大表示"
+      aria-label="Enlarged view / 拡大表示"
     >
       <button
         class="lightbox-close-btn"
         id="lightbox-close"
-        aria-label="閉じる"
+        aria-label="Close / 閉じる"
       >
         <svg
           width="18"
@@ -1655,6 +2546,37 @@
     </div>
 
     <script>
+      // ── Language switch ──────────────────────────────────────────
+      const PAGE_TITLE = { en: "Ryosuke Matsuda", ja: "松田 陵佑" };
+
+      function applyLang(lang) {
+        document.documentElement.setAttribute("data-lang", lang);
+        document.documentElement.setAttribute("lang", lang);
+        document.title = PAGE_TITLE[lang] || PAGE_TITLE.en;
+        document.querySelectorAll(".lang-btn").forEach((b) => {
+          b.setAttribute(
+            "aria-pressed",
+            String(b.dataset.setLang === lang),
+          );
+        });
+      }
+
+      applyLang(document.documentElement.getAttribute("data-lang") || "en");
+
+      document.querySelectorAll(".lang-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const lang = btn.dataset.setLang;
+          applyLang(lang);
+          try {
+            localStorage.setItem("site-lang", lang);
+          } catch (e) {}
+          if (typeof window.gtag === "function") {
+            window.gtag("event", "language_switch", { language: lang });
+          }
+        });
+      });
+
+      // ── Lightbox ─────────────────────────────────────────────────
       const photo = document.querySelector(".profile-photo");
       const lightbox = document.getElementById("lightbox");
       const lightboxImg = document.getElementById("lightbox-img");
@@ -1707,10 +2629,11 @@
         if (e.key === "Escape") closeLightbox();
       });
 
-      // Email popup
+      // ── Email popup ──────────────────────────────────────────────
       const emailIconBtn = document.getElementById("email-icon-btn");
       const emailPopup = document.getElementById("email-popup");
       const emailCopyBtn = document.getElementById("email-copy-btn");
+      const emailCopyBtnHtml = emailCopyBtn.innerHTML;
       const EMAIL_ADDR = "matsuda.ryosuke@dc.tohoku.ac.jp";
 
       emailIconBtn.addEventListener("click", (e) => {
@@ -1724,10 +2647,11 @@
         navigator.clipboard
           .writeText(EMAIL_ADDR)
           .then(() => {
-            emailCopyBtn.textContent = "✓ Copied";
+            emailCopyBtn.innerHTML =
+              '<span class="en-only">✓ Copied</span><span class="ja-only">✓ コピー済み</span>';
             emailCopyBtn.classList.add("copied");
             setTimeout(() => {
-              emailCopyBtn.textContent = "Copy";
+              emailCopyBtn.innerHTML = emailCopyBtnHtml;
               emailCopyBtn.classList.remove("copied");
             }, 2000);
           })
@@ -1747,7 +2671,7 @@
         }
       });
 
-      // Publication thumbnails — double-click to enlarge image
+      // ── Publication thumbnails — double-click to enlarge image ───
       document.querySelectorAll(".pub-thumb-wrap").forEach((wrap) => {
         wrap.addEventListener("dblclick", () => {
           const img = wrap.querySelector(".pub-thumb");
@@ -1755,12 +2679,33 @@
         });
       });
 
-      // Abstract accordion
+      // ── Abstract accordion ───────────────────────────────────────
       document.querySelectorAll(".pub-abstract-btn").forEach((btn) => {
         btn.addEventListener("click", () => {
           const item = btn.closest(".pub-item");
           const isExpanded = item.classList.toggle("expanded");
           btn.setAttribute("aria-expanded", isExpanded);
+          if (isExpanded && typeof window.gtag === "function") {
+            window.gtag("event", "abstract_open", {
+              publication_id: item.id,
+            });
+          }
+        });
+      });
+
+      // ── GA4: track outbound & PDF clicks ─────────────────────────
+      document.querySelectorAll("a[href]").forEach((a) => {
+        a.addEventListener("click", () => {
+          if (typeof window.gtag !== "function") return;
+          const href = a.getAttribute("href") || "";
+          if (href.toLowerCase().endsWith(".pdf")) {
+            window.gtag("event", "file_download", {
+              file_name: href.split("/").pop(),
+              link_url: href,
+            });
+          } else if (/^https?:/i.test(href)) {
+            window.gtag("event", "outbound_click", { link_url: href });
+          }
         });
       });
     </script>
